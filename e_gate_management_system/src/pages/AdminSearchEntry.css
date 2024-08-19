@@ -1,0 +1,77 @@
+/* Container for the filter form */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+.filter-container {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    font-family: 'Montserrat', sans-serif ;
+    font-stretch: extra-expanded  ;
+    font-style: normal ;
+    /* font-family: 'Montserrat', sans-serif; */
+  }
+  
+  /* Styling the form */
+  .filter-form {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+    background-color: #f9f9f9; /* Light background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+  
+  /* Styling each form group */
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+  }
+  
+  /* Label styling */
+  .form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  /* Input styling */
+  .form-group input,
+  .form-group select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  /* Button styling */
+  .filter-submit {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .filter-submit:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .filter-form {
+      flex-direction: column; /* Stack inputs vertically on small screens */
+      gap: 15px;
+    }
+  
+    .form-group {
+      width: 100%;
+    }
+  
+    .filter-submit {
+      width: 100%;
+    }
+  }
+  

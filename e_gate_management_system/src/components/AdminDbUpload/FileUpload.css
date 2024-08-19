@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+.fileupload-container {
+    background-color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    max-width: 90vw;
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Montserrat', sans-serif;
+}
+
+h2 {
+    padding-left: 20px;
+    font-weight: bold;
+    color: #333;
+}
+
+.fileupload-form {
+    display: flex;
+    flex-direction: column;
+    box-shadow: -10px 5px 16px rgba(7, 7, 7, 0.1);
+    padding: 2px 0 15px 0px;
+    border-radius: 10px;
+    align-items: start;
+    background-color: #eeeded;
+}
+
+.input-group  {
+    margin: 10px 0;
+    width: 100%;
+    /* background-color: aquamarine; */
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+    justify-content: space-around;
+    align-items:center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+
+}
+.batch-name{
+    margin: 10px 0;
+    width: 28%;
+    /* background-color: aquamarine; */
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+    justify-content: space-between;
+    align-items:center;
+    margin-bottom: 10px;
+    /* background-color: #ea4205; */
+}
+.note{
+    /* background-color: aqua; */
+    width: 60%;
+    text-align: start;
+    /* color: #ea4205; */
+}
+.input-group label {
+    width: 40%;
+    padding: 10px;
+    font-weight: bolder;
+    font-weight: inherit;
+    /* margin-bottom: 8px; */
+    /* background-color: blue; */
+}
+
+.input-group input {
+    padding: 10px;
+    border-radius: 5px;
+    font-family: inherit;
+    border: 1px solid #ccc;
+}
+
+.dropzone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    text-align: center;
+    /* margin-left: 5%; */
+    width: 70vw;
+    /* height: 100px;    */
+    cursor: pointer;
+    margin-left: 2%;
+    transition: border-color 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.dropzone.active {
+    border-color: #fb9529;
+}
+
+.dropzone p {
+    margin: 0;
+    font-size: 16px;
+    color: #666;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 2%;
+}
+
+.save-changes-btn {
+    background-color: #0955fb;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-color 0.3s ease;
+    margin: 0px 30px 5px 4px;
+}
+
+.save-changes-btn:hover {
+    background-color: #105f01;
+}
+
+.cancel-btn {
+    background-color: #f50707;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 0px 30px 5px 4px;
+}
+
+.cancel-btn:hover {
+    background-color: #f1dd48;
+}
+@media (max-width: 768px) {
+    .input-group{
+    flex-direction: column;
+    align-items: flex-start;
+    }
+    .batch-name,.note{
+        width: 80%;
+        padding: 10px 40px; 
+    }
+    .dropzone{
+        width: 60vw;
+    }
+}

@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+.header-gradient {
+  background: linear-gradient(240deg, #eda202 35%, #f5de14 100%);
+  color: white;
+  /* padding: 5px; */
+}
+.brand_name{
+  width: 200px;
+  /* background-color: aqua; */
+  display: flex;
+  padding-left: 0;
+  flex-direction: row;
+  justify-content:space-between;
+  align-items: center;
+
+}
+
+.navbar {
+  font-family: 'Montserrat', sans-serif;
+  font-stretch: extra-expanded;
+  /* font-style: italic; */
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
+  background-color: linear-gradient(180deg, #fb9529, 25%, #fcaf08 100%);
+  padding: 10px 30px;
+  display: flex;
+  align-items: center;
+  border-radius: 0px 0px 8px 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.kce_logo {
+  height: 10vh;
+  /* margin-right: 10px; */
+}
+
+.egate_header {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.navbar-nav {
+  margin-left: auto;
+  display: flex;
+  gap: 15px;
+}
+
+.nav-item {
+  list-style: none;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #333;
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 5px;
+}
+
+.nav-link:hover {
+  color: wheat;
+}
+
+/* Logout Button Styles */
+.logout {
+  background-color: #f5c050;  
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.logout:hover {
+  background-color: wheat;
+  color: #333; /* Darker red on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .navbar-brand {
+    margin-bottom: 10px;
+  }
+
+  .navbar-nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .egate_header {
+    font-size: 1.5rem;
+  }
+
+  .kce_logo {
+    height: 8vh;
+  }
+
+  .logout {
+    align-self: flex-end;
+    margin-top: 10px;
+  }
+}

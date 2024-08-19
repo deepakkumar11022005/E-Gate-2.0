@@ -1,0 +1,61 @@
+/* Container */
+.existing-db-container {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  max-width: 90%;
+  margin: 40px auto;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Title */
+/* .existing-db-container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: bold;
+} */
+
+/* List Container */
+.db-list-container {
+  /* max-height: 200px; */
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  background-color: #fff;
+}
+
+/* List */
+.db-list {
+  list-style: none;
+  display: flex;
+  justify-content: start;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
+
+}
+h2 {
+  padding-left: 20px;
+  font-weight: bold;
+  color: #333;
+}
+/* List Items */
+.db-item {
+  padding: 10px 15px;
+  border-radius: 8px;
+  /* border-bottom: 1px solid #ddd; */
+  transition: background-color 0.3s;
+  color: #555;
+}
+
+.db-item:last-child {
+  border-bottom: none;
+}
+
+.db-item:hover {
+  background-color: #f0f0f0;
+  cursor: pointer;
+}

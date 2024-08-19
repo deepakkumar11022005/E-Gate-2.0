@@ -1,0 +1,83 @@
+ 
+/* Main.css */
+.container{
+    width: 100%;
+    
+    
+}
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: 'Montserrat', sans-serif ;
+    font-stretch: extra-expanded  ;
+    /* font-style: italic ; */
+    width: 85% ;
+    background-color: #ffffff;
+    box-shadow: 0 4px 55px rgba(0, 0, 0, 0.1);
+    padding: 50px;
+    margin-top: 10vh;
+    border-radius: 8px;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.TodayData {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    width: 80vw;
+}
+
+.dialogue-box {
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    width: 22%;
+    text-align: center;
+    transition: transform 0.2s;
+}
+
+.dialogue-box:hover {
+    transform: translateY(-5px);
+}
+
+.dialogue-box h3 {
+    font-size: 1.4rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.dialogue-box p {
+    font-size: 1.1rem;
+    color: #666;
+    text-align: center;
+}
+
+.count {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #fcaf08;
+}
+@media (max-width: 1200px) {
+
+    .dialogue-box {
+        width: 45%;
+        /* padding: 0px 50px; */
+         
+        margin: 10px 0;
+    }
+}
+@media (max-width: 768px) {
+
+    .dialogue-box {
+        width: 80%;
+        padding: 0px 50px;
+        margin: 10px 0;
+    }
+}
