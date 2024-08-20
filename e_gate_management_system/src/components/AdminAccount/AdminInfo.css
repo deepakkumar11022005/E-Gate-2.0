@@ -4,10 +4,12 @@
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     max-width: 90vw;
+    height: auto;
     margin: 40px auto;
     display: flex;
     flex-direction: column;
     font-family: 'Montserrat', sans-serif;
+    /* background-color: aqua; */
 }
 
 .roundImage {
@@ -41,6 +43,7 @@
     align-items: center;
     flex-wrap: wrap;
     padding: 5px;
+    /* background-color: bisque; */
 }
 .infoContainer {
    

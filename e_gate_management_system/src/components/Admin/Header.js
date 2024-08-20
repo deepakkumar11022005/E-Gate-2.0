@@ -1,11 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import kceLogo from '../../images/kce.gif';
 import { Link } from 'react-router-dom';
 import './Header.css';
 
 const Header = () => {
+
+  useEffect(() => {
+    const header = document.getElementById("header");
+
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        header.classList.add("sticky");
+      } else {
+        header.classList.remove("sticky");
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
-    <header className="navbar navbar-expand-lg header-gradient">
+    <header id="header" className="navbar navbar-expand-lg header-gradient">
       <div className="brand_name">
         <Link className="navbar-brand" to="/admin/home">
           <img src={kceLogo} alt="Admin Logo" className="kce_logo" />

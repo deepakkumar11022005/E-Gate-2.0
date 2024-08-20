@@ -15,7 +15,9 @@
   align-items: center;
 
 }
-
+.egate_header{
+  color: #2C3E50 !important;
+}
 .navbar {
   font-family: 'Montserrat', sans-serif;
   font-stretch: extra-expanded;
@@ -37,6 +39,7 @@
   display: flex;
   align-items: center;
   text-decoration: none;
+  
 }
 
 .kce_logo {
@@ -124,3 +127,29 @@
     margin-top: 10px;
   }
 }
+/* Sticky Navbar */
+.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  animation: slideDown 0.5s ease-in-out;
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-70%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Adjust the padding and margins for the sticky navbar */
+.sticky .navbar {
+  padding: 5px 30px;
+}
+
+ 

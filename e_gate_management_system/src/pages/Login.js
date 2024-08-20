@@ -29,10 +29,10 @@ const Login = ({ onLogin }) => {
 
     const location = useLocation();
     const handleLoginClick = (role) => {
-        if (location.pathname.includes('/admin')) 
-        onLogin('admin');  
-        else if (location.pathname.includes('/entry')) 
-        onLogin('Entry');
+        if (location.pathname.includes('/admin'))
+            onLogin('admin');
+        else if (location.pathname.includes('/entry'))
+            onLogin('Entry');
     };
 
     const handleSubmit = (event) => {
@@ -54,6 +54,8 @@ const Login = ({ onLogin }) => {
             disableGutters
             sx={{
                 fontFamily: "'Montserrat', sans-serif",
+                fontStretch: "extra-expanded",
+                fontSize: "18px",
                 display: 'flex',
                 height: '100vh',
                 flexDirection: { xs: 'column', md: 'row' }, // Responsive layout
@@ -105,7 +107,7 @@ const Login = ({ onLogin }) => {
                         width: '50%',
                         height: 'auto',
                         marginLeft: '-32.7%',
-                        marginBottom: 2, 
+                        marginBottom: 2,
                     }}
                 />
 
@@ -120,6 +122,9 @@ const Login = ({ onLogin }) => {
                         textAlign: 'left',
                         margin: 2,
                         marginLeft: -5,
+                        fontFamily: "'Montserrat', sans-serif",
+                        fontStretch: "extra-expanded",
+                        fontSize: "2.5rem",
                     }}
                 >
                     E-Gate Management System
@@ -133,6 +138,7 @@ const Login = ({ onLogin }) => {
                         fontSize: 18,
                         textAlign: 'left',
                         marginLeft: 5,
+                      
                     }}
                 >
                     Welcome to the E-Gate Management System. This system is designed to manage and track the entry
@@ -213,6 +219,9 @@ const Login = ({ onLogin }) => {
                                 '&:hover': {
                                     backgroundColor: '#388E3C',
                                 },
+                                fontFamily: "'Montserrat', sans-serif",
+                                fontStretch: "extra-expanded",
+                                fontSize: "1rem",
                             }}
                         >
                             Sign In
@@ -239,6 +248,9 @@ const Login = ({ onLogin }) => {
                                 borderColor: '#357AE8',
                                 color: '#357AE8',
                             },
+                            fontFamily: "'Montserrat', sans-serif",
+                            fontStretch: "extra-expanded",
+                            fontSize: "1rem",
                         }}
                     >
                         Continue with Google

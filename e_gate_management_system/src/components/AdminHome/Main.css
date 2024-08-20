@@ -33,13 +33,19 @@
 }
 
 .dialogue-box {
-    background-color: white;
+    background-color: rgba(239, 238, 238, 0.422);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     padding: 10px;
-    width: 22%;
+    width: 29%;
     text-align: center;
     transition: transform 0.2s;
+}
+.home-content{
+    text-align: center;
+    width: 70%;
+    font-size: 1.061rem;
+    /* letter-spacing: 1px; */
 }
 
 .dialogue-box:hover {

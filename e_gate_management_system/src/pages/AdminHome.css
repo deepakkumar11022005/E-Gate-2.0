@@ -8,3 +8,16 @@
     
     /* text-shadow: 1px 1px rgb(255, 174, 0); */
  }
+ .current-entry-head{
+   text-align: center;
+   align-items: center;
+   font-family: 'Montserrat', sans-serif ;
+   font-stretch: extra-expanded  ;
+   color:  #2C3E50;
+   font-weight: bolder;
+   font-size: 1.4rem;
+   padding-top: 20px;
+   margin-left: auto;
+   margin-right: auto;
+   width: 90%;
+ }

@@ -9,6 +9,11 @@
     font-style: normal ;
     /* font-family: 'Montserrat', sans-serif; */
   }
+  .person-info-header{
+    font-family: 'Montserrat', sans-serif ;
+    font-stretch: extra-expanded  ;
+    font-style: normal;
+  }
   
   /* Styling the form */
   .filter-form {

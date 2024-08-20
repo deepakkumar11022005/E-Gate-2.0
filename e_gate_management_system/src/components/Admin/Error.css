@@ -1,0 +1,47 @@
+.error-dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.error-dialog-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+ 
+}
+
+.error-dialog-content h2 {
+  margin: 0 0 10px;
+  color: red;
+}
+
+.error-dialog-content p {
+  margin: 0 0 20px;
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+.error-dialog-content button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.error-dialog-content button:hover {
+  background-color: #0056b3;
+}

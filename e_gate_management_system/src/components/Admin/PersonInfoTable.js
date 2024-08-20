@@ -2,7 +2,7 @@ import React from 'react';
 import './PersonInfoTable.css';
 import FilterCountAndDownload from '../AdminSearch/FilterCountAndDownload';
 
-const PersonInfoTable = ({data}) => {
+const PersonInfoTable = ({tableEntries}) => {
     // Sample data for demonstration purposes
    
 
@@ -26,7 +26,7 @@ const PersonInfoTable = ({data}) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map((item, index) => (
+                        {tableEntries.map((item, index) => (
                             <tr key={index}>
                                 <td>{item.sno}</td>
                                 <td>{item.rollNum}</td>

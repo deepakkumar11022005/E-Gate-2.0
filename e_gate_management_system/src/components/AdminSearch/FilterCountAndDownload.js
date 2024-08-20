@@ -1,16 +1,16 @@
 import React from 'react'
 
-const FilterCountAndDownload = ({dataCount}) => {
+const FilterCountAndDownload = ({filterCount}) => {
   return (
     <>
-     {/* Row 1: Count and Download Button */}
+      
      <div className="person-info-header">
                 <div className=""></div>
                 <div className="result">
                     <h4>Result </h4>
                 </div>
                 <div className="count-download">
-                    <span className='total-entries'>Total Entries: {dataCount}</span>
+                    <span className='total-entries'>Total Entries: {filterCount}</span>
                     <button className="download-btn">Download</button>
                 </div>
             </div>

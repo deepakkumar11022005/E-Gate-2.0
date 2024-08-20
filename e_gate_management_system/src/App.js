@@ -8,27 +8,16 @@ import Search from './pages/AdminSearchEntry';
 import Account from './pages/AdminAccount';
 import ManageBatch from './pages/AdminDbUpload';
 import PageNotFound from './pages/PageNotFound';
+import { AppBar } from '@mui/material';
 
 const App = () => {
+    const API_URL="http://localhost:8080";
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [role, setRole] = useState(null);
-
     const location = useLocation();
     const navigate = useNavigate();
 
-    const data = [
-
-        { sno: 1, rollNum: ' 717822P212', name: 'John Doe', inDate: '2024-08-14', inTime: '09:00 AM', outDate: '2024-08-14', outTime: '05:00 PM', status: 'Present' },
-        { sno: 1, rollNum: ' 717822P212', name: 'John Doe', inDate: '2024-08-14', inTime: '09:00 AM', outDate: '2024-08-14', outTime: '05:00 PM', status: 'Present' },
-        { sno: 1, rollNum: ' 717822P212', name: 'John Doe', inDate: '2024-08-14', inTime: '09:00 AM', outDate: '2024-08-14', outTime: '05:00 PM', status: 'Present' },
-        { sno: 1, rollNum: ' 717822P212', name: 'John Doe', inDate: '2024-08-14', inTime: '09:00 AM', outDate: '2024-08-14', outTime: '05:00 PM', status: 'Present' },
-        { sno: 1, rollNum: ' 717822P212', name: 'John Doe', inDate: '2024-08-14', inTime: '09:00 AM', outDate: '2024-08-14', outTime: '05:00 PM', status: 'Present' },
-        { sno: 1, rollNum: ' 717822P212', name: 'John Doe', inDate: '2024-08-14', inTime: '09:00 AM', outDate: '2024-08-14', outTime: '05:00 PM', status: 'Present' },
-        { sno: 1, rollNum: ' 717822P212', name: 'John Doe', inDate: '2024-08-14', inTime: '09:00 AM', outDate: '2024-08-14', outTime: '05:00 PM', status: 'Present' },
-        { sno: 1, rollNum: ' 717822P212', name: 'John Doe', inDate: '2024-08-14', inTime: '09:00 AM', outDate: '2024-08-14', outTime: '05:00 PM', status: 'Present' },
-        { sno: 2, rollNum: '12346', name: 'Jane Smith', inDate: '2024-08-14', inTime: '09:15 AM', outDate: '2024-08-14', outTime: '05:15 PM', status: 'Present' },
-        // Add more data as needed
-      ];
+    
     useEffect(() => {
         
         if (location.pathname.includes('/admin')) {
@@ -63,10 +52,10 @@ const App = () => {
         <Routes>
             {/* Route for Admin */}
             <Route path="/admin">
-                <Route path="home" element={role === 'admin' ? <AdminHome data={data}/> : <Navigate to="/" />} />
-                <Route path="search" element={role === 'admin' ? <Search data={data}/> : <Navigate to="/" />} />
-                <Route path="manage-batch" element={role === 'admin' ? <ManageBatch /> : <Navigate to="/" />} />
-                <Route path="account" element={role === 'admin' ? <Account /> : <Navigate to="/" />} />
+                <Route path="home" element={role === 'admin' ? <AdminHome API_URL={AppBar}  /> : <Navigate to="/" />} />
+                <Route path="search" element={role === 'admin' ? <Search API_URL={AppBar} /> : <Navigate to="/" />} />
+                <Route path="manage-batch" element={role === 'admin' ? <ManageBatch API_URL={AppBar}  /> : <Navigate to="/" />} />
+                <Route path="account" element={role === 'admin' ? <Account  API_URL={AppBar} /> : <Navigate to="/" />} />
             </Route>
 
             {/* Route for Entry */}
