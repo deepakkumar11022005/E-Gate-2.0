@@ -7,8 +7,8 @@ const AddAdmin = () => {
   const handleSubmit = (e) => {
     e.preventDefault(); // Prevent the form from submitting the traditional way
     console.log('Admin added with email:', email);
-   
-    setEmail('');  
+
+    setEmail('');
   };
 
   return (
@@ -27,6 +27,12 @@ const AddAdmin = () => {
             required
             aria-label="add Admin"
           />
+        </div>
+        <div className="rules">
+          <h4> Terms and Condition Apply *</h4>
+          <p>
+            As an authorized personnel, you are responsible for adding an Admin. Ensure that the individual meets all necessary criteria. A confirmation email will be sent to the provided email address above, granting all the necessary rights. You will face all consequences of this action.
+            </p>
         </div>
         <button type="submit" className="add-admin-btn">
           Add Admin

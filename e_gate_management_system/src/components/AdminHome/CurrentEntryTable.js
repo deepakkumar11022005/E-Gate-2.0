@@ -11,8 +11,10 @@
             <thead>
                 <tr>
                     <th>S.No</th>
+                    <th>Batch</th>
                     <th>Roll Number</th>
                     <th>Name</th>
+                    <th>Department</th>
                     <th>In Date</th>
                     <th>In Time</th>
                     <th>Out Date</th>
@@ -24,8 +26,10 @@
                 {currentEntries.map((entry, index) => (
                     <tr key={index}>
                         <td>{entry.sno}</td>
+                        <td>{entry.bacth}</td>
                         <td>{entry.rollNum}</td>
                         <td>{entry.name}</td>
+                        <td>{entry.department}</td>
                         <td>{entry.inDate}</td>
                         <td>{entry.inTime}</td>
                         <td>{entry.outDate}</td>

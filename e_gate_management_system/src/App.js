@@ -16,6 +16,7 @@ const App = () => {
     const [role, setRole] = useState(null);
     const location = useLocation();
     const navigate = useNavigate();
+    const [email,setEmail]=useState("717822p212@kce.ac.in");
 
     
     useEffect(() => {
@@ -55,7 +56,7 @@ const App = () => {
                 <Route path="home" element={role === 'admin' ? <AdminHome API_URL={AppBar}  /> : <Navigate to="/" />} />
                 <Route path="search" element={role === 'admin' ? <Search API_URL={AppBar} /> : <Navigate to="/" />} />
                 <Route path="manage-batch" element={role === 'admin' ? <ManageBatch API_URL={AppBar}  /> : <Navigate to="/" />} />
-                <Route path="account" element={role === 'admin' ? <Account  API_URL={AppBar} /> : <Navigate to="/" />} />
+                <Route path="account" element={role === 'admin' ? <Account  API_URL={AppBar}  email={email}/> : <Navigate to="/" />} />
             </Route>
 
             {/* Route for Entry */}

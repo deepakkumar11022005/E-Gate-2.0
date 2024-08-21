@@ -34,12 +34,26 @@
 .input_group label {
     margin-bottom: 5px; /* Space between label and input */
     font-weight: bold;
-    padding:10px 5px;
+    padding:10px 30px;
     color: #333; /* Darker text color for better readability */
     text-align: left; /* Ensure label text is left-aligned */
 }
-
+.rules{
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.rules h4{
+    color: rgb(255, 72, 0);
+}
+.rules p{
+    text-align: justify;
+    font-stretch: expanded;
+    text-indent: 20px;
+    /* padding-bottom: 20px; */
+}
 .email_input {
+    margin-left: 8%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -56,6 +70,7 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    margin-left: 5%;
     font-size: 1rem;
     transition: background-color 0.3s ease;
     width: 30%; /* Make the button full width */

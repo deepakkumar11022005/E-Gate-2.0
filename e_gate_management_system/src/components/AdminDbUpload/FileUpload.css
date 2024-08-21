@@ -2,16 +2,43 @@
 
 .fileupload-container {
     background-color: #ffffff;
-    padding: 10px 20px;
+    padding: 20px 20px;
     border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 1px 4px 16px rgba(13, 12, 12, 0.1);
     max-width: 90vw;
     margin: 40px auto;
     display: flex;
     flex-direction: column;
     font-family: 'Montserrat', sans-serif;
 }
-
+.uploading-circle {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 1em;
+    color: #fff;
+    position: relative;
+  }
+  
+  .circle {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    margin-right: 8px;
+    animation: rotate 1s infinite linear;
+  }
+  
+  @keyframes rotate {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
 h2 {
     padding-left: 20px;
     font-weight: bold;
@@ -136,6 +163,7 @@ h2 {
     cursor: pointer;
     transition: background-color 0.3s ease;
     margin: 0px 30px 5px 4px;
+    font-family: inherit;
 }
 
 .cancel-btn:hover {

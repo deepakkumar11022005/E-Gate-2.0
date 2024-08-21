@@ -16,8 +16,10 @@ const PersonInfoTable = ({tableEntries}) => {
                     <thead>
                         <tr>
                             <th>S.No</th>
+                            <th>Batch</th>
                             <th>Roll Number</th>
                             <th>Name</th>
+                            <th>Department</th>
                             <th>In Date</th>
                             <th>In Time</th>
                             <th>Out Date</th>
