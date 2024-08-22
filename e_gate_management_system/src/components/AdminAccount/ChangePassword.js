@@ -5,7 +5,7 @@ import './ChangePassword.css';  // Ensure this path is correct
 import OtpVerification from './OtpVerification';
 
 const ChangePassword = ({
-    verifyOldPassword,
+    verifyAndChangePassword,
     setOldPassword,
     changePassword,
     setConfirmPassword,
@@ -25,27 +25,30 @@ const ChangePassword = ({
     const [step, setStep] = useState(1);
     const [showOtpBox, setShowOtpBox] = useState(false);
     const [showExpiresMsg, setShowExpiresMsg] = useState(false);
-
+    const [passwordChangedMsg,setPasswordChangedMsg]=useState(false);
     // useEffect(()=>{
 
     // },[showExpiresMsg,showMessage]);
 
     const handlePasswordSubmit = async () => {
         try {
-            const isValid = await verifyOldPassword(oldPassword);
+            if (newPassword !== confirmPassword) {
+                setError('New password and confirm password do not match.');
+                return;
+            }
+            else{
+            const isValid = await verifyAndChangePassword(oldPassword,newPassword,confirmPassword);
             if (isValid) {
-                if (newPassword !== confirmPassword) {
-                    setError('New password and confirm password do not match.');
-                    return;
-                }
+                
                 await sendOtp();
                 setStep(2);
                 setShowOtpBox(true);
                 setError(null);
             } else {
-                setError('Incorrect old password.');
+                // setError('Incorrect old password.');
                 setShowMessage(true);
             }
+        }
         } catch (err) {
             setError('An error occurred while processing your request.');
         }
@@ -57,6 +60,7 @@ const ChangePassword = ({
             if (isOtpValid) {
                 await changePassword(newPassword);
                 setStep(1);
+                setPasswordChangedMsg(true);
                 setShowOtpBox(false);
                 setError(null);
             } else {
@@ -86,6 +90,9 @@ const ChangePassword = ({
         setShowExpiresMsg(false);
     };
 
+    const handleOkOfPwdChanged= ()=>{
+        setPasswordChangedMsg(false);
+    }
     return (
         <div className="edit-pwd-container">
             <h2 className="title">Change Password</h2>
@@ -97,6 +104,14 @@ const ChangePassword = ({
                         { label: 'Cancel', onClick: handleCancelMessage, className: 'close-btn' }
                     ]}
                 />
+            )}
+            {passwordChangedMsg && (
+                <Message
+                message="Password changed successfully!"
+                buttons={[
+                    { label: 'Ok', onClick: handleOkOfPwdChanged , className: 'ok-btn'}
+                ]}
+            />
             )}
             {loading ? <Loading/>:(
                 <div className=""> 

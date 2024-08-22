@@ -12,7 +12,7 @@ const PwdAndAdmin = ({
   setOtp,
   confirmPassword,
   setNewPassword,
-  verifyOldPassword,
+  verifyAndChangePassword,
   sendOtp,
   changePassword,
   verifyOtp,
@@ -21,12 +21,15 @@ const PwdAndAdmin = ({
   setError,
   newAdminEmail,
   setNewAdminEmail,
-  handleAddAdmin
+  handleAddAdmin,
+  addAdminError,
+  setAddAdminError,
+  addAdminLoading
 }) => {
   return (
     <div className="container-flex">
       <ChangePassword
-        verifyOldPassword={verifyOldPassword}
+        verifyAndChangePassword={verifyAndChangePassword}
         sendOtp={sendOtp}
         verifyOtp={verifyOtp}
         oldPassword={oldPassword}
@@ -47,8 +50,9 @@ const PwdAndAdmin = ({
         setNewAdminEmail={setNewAdminEmail}
         handleAddAdmin={handleAddAdmin}
         error={error}
-        loading={loading}
-        setError={setError}
+        addAdminLoading={addAdminLoading}
+        addAdminError={addAdminError}
+        setAddAdminError={setAddAdminError}
       />
     </div>
   );

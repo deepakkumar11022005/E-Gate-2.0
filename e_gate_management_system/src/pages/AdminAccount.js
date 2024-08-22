@@ -12,8 +12,9 @@ const AdminAccount = ({ API_URL, email }) => {
   const [newAdminEmail, setNewAdminEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  const verifyOldPassword = async (oldPassword) => {
+  const [addAdminError ,setAddAdminError]=useState(null);
+  const [addAdminLoading,setAddAdminLoading]=useState(false)
+  const verifyAndChangePassword = async (oldPassword,newPassword,confirmPassword) => {
     setLoading(true);
     try {
       const response = await fetch(`${API_URL}/admin/verify-password`, {
@@ -111,14 +112,38 @@ const AdminAccount = ({ API_URL, email }) => {
       }
     } catch (error) {
       setError(error.message);
-      return false;
+      return true;
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAddAdmin = async () => {
-    // Implement the add admin functionality here
+  const handleAddAdmin = async (newAdminEmail) => {
+     setAddAdminLoading(true);
+     try {
+      const response = await fetch(`${API_URL}/admin/add-admin`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, otp }),
+      });
+
+      if (response.ok) {
+   
+        setAddAdminError(null);
+        return true;
+      } else {
+        const data = await response.json();
+        setAddAdminError(data.errorMessage || "Something went Wrong! Please try Again");
+        return false;
+      }
+    } catch (error) {
+      setAddAdminError(error.message);
+      return true;
+    } finally {
+      setAddAdminLoading(false);
+    }
   };
 
   return (
@@ -127,7 +152,7 @@ const AdminAccount = ({ API_URL, email }) => {
       <AdminInfo email={email} />
       <PwdAndAdmin
         changePassword={changePassword}
-        verifyOldPassword={verifyOldPassword}
+        verifyAndChangePassword={verifyAndChangePassword}
         handleAddAdmin={handleAddAdmin}
         sendOtp={sendOtp}
         verifyOtp={verifyOtp}
@@ -142,8 +167,12 @@ const AdminAccount = ({ API_URL, email }) => {
         setNewPassword={setNewPassword}
         setConfirmPassword={setConfirmPassword}
         confirmPassword={confirmPassword}
+        addAdminError={addAdminError}
+        setAddAdminError={setAddAdminError}
         otp={otp}
         setOtp={setOtp}
+        addAdminLoading={addAdminLoading}
+        
       />
       <Footer />
     </div>

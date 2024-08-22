@@ -17,12 +17,17 @@ const AdminHome = ({ API_URL }) => {
   const [currentEntries, setCurrententries] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const [pageSize,setPageSize]=useState(0);
+  const [pageNo,setPageNo]=useState(0);
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const entryResponse = await fetch(`${API_URL}/get/entryDetails`);
+        const entryResponse = await fetch(`${API_URL}/get/entryDetails`,{
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({  })
+        });
         
         
         const entryData = await entryResponse.json();

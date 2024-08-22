@@ -29,7 +29,7 @@ const App = () => {
     }, [location]);
 
     const handleLogin = (userRole) => {
-        // console.log("User role is:", userRole);   
+ 
         setIsLoggedIn(true);
         setRole(userRole);
 

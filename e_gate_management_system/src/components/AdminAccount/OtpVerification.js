@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Loading from '../Admin/Loading';
 import './OtpVerification.css';  // Updated CSS
 
-const OtpVerification = ({ otp, setOtp, onSubmit, loading, setShowOtpBox ,setShowExpiresMsg}) => {
-    const [timeLeft, setTimeLeft] = useState(10); // 90 seconds for 1.5 minutes
+const OtpVerification = ({ otp, setOtp, onSubmit, loading, error,setShowOtpBox ,setShowExpiresMsg}) => {
+    const [timeLeft, setTimeLeft] = useState(60*5); // 90 seconds for 1.5 minutes
 
     useEffect(() => {
         if (timeLeft <= 0) {
@@ -28,6 +28,7 @@ const OtpVerification = ({ otp, setOtp, onSubmit, loading, setShowOtpBox ,setSho
         <div className="otp-modal-overlay">
             <div className="otp-modal">
                 <h2 className="otp-title">OTP Verification</h2>
+
                 <form className="otp-form" onSubmit={handleSubmit}>
                     {loading ? (<Loading/>):(
                         <div className="">
@@ -51,15 +52,15 @@ const OtpVerification = ({ otp, setOtp, onSubmit, loading, setShowOtpBox ,setSho
                         </p>
                     </div>
                     <div className="btn-body">
-                         {/* {error && <p className="error-message">{error}</p>} */}
+                         {error && <p className="error-message">{error}</p>}
                     <button type="submit" className="verify-btn" aria-label="Verify OTP">
-                        {/* {loading ? <Loading /> : 'Verify OTP'} */}
-                        Verify OTP
+                        {loading ? <Loading /> : 'Verify OTP'}
+                        {/* Verify OTP */}
                     </button>
                     </div>
                   
                     </div>
-                    )};
+                    )}
                 </form>
             </div>
         </div>

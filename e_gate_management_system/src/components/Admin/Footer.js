@@ -9,7 +9,8 @@ const Footer = () => {
       <div className="footer-container">
         <div className="footer-section">
           <h3 className="footer-title">About Us</h3>
-          <p className="footer-text">We are dedicated to providing the best e-gate management solutions.</p>
+          <p className="footer-text">The E-Gate Management System at Karpagam College of Engineering is designed to efficiently manage and secure campus entry and exit, ensuring safety and convenience for both faculty and students.
+</p>
         </div>
 
         <div className="footer-section">
@@ -25,8 +26,8 @@ const Footer = () => {
         <div className="footer-section">
           <h3 className="footer-title">Contact Us</h3>
           <p className="footer-text">Karpagam College of Engineering, Coimbatore</p>
-          <p className="footer-text">Email: 717822P212@kce.ac.in </p>
-          <p className="footer-text">Email: 717822F110@kce.ac.in</p>
+          <p className="footer-text">Email: <a href="mailto:kce.egate@gmail.com" className='footer-email'> kce.egate@gmail.com </a> </p>
+          {/* <p className="footer-text">Email: 717822F110@kce.ac.in</p> */}
         </div>
       </div>
       <div className="footer-bottom">
