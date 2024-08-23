@@ -3,11 +3,10 @@ import kceLogo from '../../images/kce.gif';
 import { Link } from 'react-router-dom';
 import './Header.css';
 
-const Header = () => {
+const Header = ({handleLogout}) => {
 
   useEffect(() => {
     const header = document.getElementById("header");
-
     const handleScroll = () => {
       if (window.scrollY > 50) {
         header.classList.add("sticky");
@@ -37,7 +36,7 @@ const Header = () => {
         <Link className="nav-item nav-link" to="/admin/manage-batch">Manage Batch</Link>
         {/* <Link className="nav-item nav-link" to="/admin/visual">Visual</Link> */}
         <Link className="nav-item nav-link" to="/admin/account">Account</Link>
-        <button className="nav-item logout" onClick={() => window.location.href = '/admin/logout'}>Logout</button>
+        <button className="nav-item logout" onClick={handleLogout}>Logout</button>
       </nav>
     </header>
   );

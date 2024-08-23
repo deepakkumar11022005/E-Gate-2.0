@@ -1,6 +1,6 @@
 import React from 'react';
 import './Filter.css';
-
+import Loading from '../Admin/Loading';
 const Filter = ({
   fromDate,
   toDate,
@@ -14,7 +14,8 @@ const Filter = ({
   setToTime,
   setRollNumber,
   setBatch,
-  handleSearch
+  handleSearch,
+  batchLoading
 }) => {
 
   // Handler to update state values
@@ -107,9 +108,16 @@ const Filter = ({
               value={batch}
               onChange={(e) => handleInputChange(e, setBatch)}
             >
+              
+              
               <option value="">Select Batch</option>
-              <option value="batch1">Batch 1</option>
-              <option value="batch2">Batch 2</option>
+              {batchLoading ? (<Loading/>):(
+                batch.map((year)=>{
+                  <option value="batch1">year</option>
+                })
+              
+              
+            )};
               {/* Add more batches as needed */}
             </select>
           </div>

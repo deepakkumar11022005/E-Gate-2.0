@@ -37,10 +37,11 @@
   margin: 0;
 
 }
-h2 {
+.existing-db-container h2 {
   padding-left: 20px;
   font-weight: bold;
   color: #333;
+  text-align: start;
 }
 /* List Items */
 .db-item {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Loading from '../Admin/Loading';
 import Message from '../Admin/Message';
 import './ChangePassword.css';  // Ensure this path is correct
-import OtpVerification from './OtpVerification';
+import OtpVerification from '../Admin/OtpVerification.js';
 
 const ChangePassword = ({
     verifyAndChangePassword,
@@ -25,7 +25,7 @@ const ChangePassword = ({
     const [step, setStep] = useState(1);
     const [showOtpBox, setShowOtpBox] = useState(false);
     const [showExpiresMsg, setShowExpiresMsg] = useState(false);
-    const [passwordChangedMsg,setPasswordChangedMsg]=useState(false);
+    const [passwordChangedMsg, setPasswordChangedMsg] = useState(false);
     // useEffect(()=>{
 
     // },[showExpiresMsg,showMessage]);
@@ -36,19 +36,19 @@ const ChangePassword = ({
                 setError('New password and confirm password do not match.');
                 return;
             }
-            else{
-            const isValid = await verifyAndChangePassword(oldPassword,newPassword,confirmPassword);
-            if (isValid) {
-                
-                await sendOtp();
-                setStep(2);
-                setShowOtpBox(true);
-                setError(null);
-            } else {
-                // setError('Incorrect old password.');
-                setShowMessage(true);
+            else {
+                const isValid = await verifyAndChangePassword(oldPassword, newPassword, confirmPassword);
+                if (isValid) {
+
+                    await sendOtp();
+                    setStep(2);
+                    setShowOtpBox(true);
+                    setError(null);
+                } else {
+                    // setError('Incorrect old password.');
+                    setShowMessage(true);
+                }
             }
-        }
         } catch (err) {
             setError('An error occurred while processing your request.');
         }
@@ -90,7 +90,7 @@ const ChangePassword = ({
         setShowExpiresMsg(false);
     };
 
-    const handleOkOfPwdChanged= ()=>{
+    const handleOkOfPwdChanged = () => {
         setPasswordChangedMsg(false);
     }
     return (
@@ -105,81 +105,82 @@ const ChangePassword = ({
                     ]}
                 />
             )}
+
             {passwordChangedMsg && (
                 <Message
-                message="Password changed successfully!"
-                buttons={[
-                    { label: 'Ok', onClick: handleOkOfPwdChanged , className: 'ok-btn'}
-                ]}
-            />
-            )}
-            {loading ? <Loading/>:(
-                <div className=""> 
-            {step === 1 && (
-                <form onSubmit={(e) => { e.preventDefault(); handlePasswordSubmit(); }}>
-                    <div className="form-group">
-                        <label htmlFor="oldPassword">Old Password</label>
-                        <input
-                            type="password"
-                            id="oldPassword"
-                            value={oldPassword}
-                            onChange={(e) => setOldPassword(e.target.value)}
-                            required
-                            placeholder='Enter Old Password here'
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="newPassword">New Password</label>
-                        <input
-                            type="password"
-                            id="newPassword"
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            required
-                            placeholder='Enter New Password here'
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="confirmPassword">Confirm New Password</label>
-                        <input
-                            type="password"
-                            id="confirmPassword"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            required
-                            placeholder='Confirm New Password here'
-                        />
-                    </div>
-                    {/* {error && <p className="error">{error}</p>} */}
-                    <button type="submit" className="change-pwd-btn" disabled={loading}>
-                        {/* {loading ? <Loading /> : 'Change Password'}
-                         */}
-                         Change Password
-                    </button>
-                </form>
-            )}
-            {step === 2 && showOtpBox ? (
-                <OtpVerification
-                    otp={otp}
-                    setOtp={setOtp}
-                    onSubmit={handleOtpSubmit}
-                    loading={loading}
-                    error={error}
-                    setShowOtpBox={setShowOtpBox}
-                    setShowExpiresMsg={setShowExpiresMsg}
+                    message="Password changed successfully!"
+                    buttons={[
+                        { label: 'Ok', onClick: handleOkOfPwdChanged, className: 'ok-btn' }
+                    ]}
                 />
-            ) : (
-                showExpiresMsg && (
-                    <Message
-                        message="Timer expired! Please request for OTP again."
-                        buttons={[
-                            { label: 'Ok', onClick: handleExpireMsg, className: 'ok-btn' }
-                        ]}
-                    />
-                )
             )}
-            </div>
-        )}
+            {loading ? <Loading /> : (
+                <div className="">
+                    {step === 1 && (
+                        <form onSubmit={(e) => { e.preventDefault(); handlePasswordSubmit(); }}>
+                            <div className="form-group">
+                                <label htmlFor="oldPassword">Old Password</label>
+                                <input
+                                    type="password"
+                                    id="oldPassword"
+                                    value={oldPassword}
+                                    onChange={(e) => setOldPassword(e.target.value)}
+                                    required
+                                    placeholder='Enter Old Password here'
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="newPassword">New Password</label>
+                                <input
+                                    type="password"
+                                    id="newPassword"
+                                    value={newPassword}
+                                    onChange={(e) => setNewPassword(e.target.value)}
+                                    required
+                                    placeholder='Enter New Password here'
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="confirmPassword">Confirm New Password</label>
+                                <input
+                                    type="password"
+                                    id="confirmPassword"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    required
+                                    placeholder='Confirm New Password here'
+                                />
+                            </div>
+                            {/* {error && <p className="error">{error}</p>} */}
+                            <button type="submit" className="change-pwd-btn" disabled={loading}>
+                                {/* {loading ? <Loading /> : 'Change Password'}
+                         */}
+                                Change Password
+                            </button>
+                        </form>
+                    )}
+                    {step === 2 && showOtpBox ? (
+                        <OtpVerification
+                            otp={otp}
+                            setOtp={setOtp}
+                            onSubmit={handleOtpSubmit}
+                            loading={loading}
+                            error={error}
+                            setShowOtpBox={setShowOtpBox}
+                            setShowExpiresMsg={setShowExpiresMsg}
+                        />
+                    ) : (
+                        showExpiresMsg && (
+                            <Message
+                                message="Timer expired! Please request for OTP again."
+                                buttons={[
+                                    { label: 'Ok', onClick: handleExpireMsg, className: 'ok-btn' }
+                                ]}
+                            />
+                        )
+                    )}
+                </div>
+            )}
         </div>
     );
 };

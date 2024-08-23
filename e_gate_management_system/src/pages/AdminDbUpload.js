@@ -4,7 +4,7 @@ import FileUpload from '../components/AdminDbUpload/FileUpload';
 import ExcistingDb from '../components/AdminDbUpload/ExcistingDb';
 import Footer from '../components/Admin/Footer';
 
-const AdminDbUpload = ({ API_URL }) => {
+const AdminDbUpload = ({ API_URL,handleLogout }) => {
   const [existingBatch, setExistingBatch] = useState([]);
   const [uploadedBatchName, setUploadedBatchName] = useState("");
   const [uploadFile, setUploadFile] = useState(null);
@@ -86,7 +86,7 @@ const AdminDbUpload = ({ API_URL }) => {
 
   return (
     <div>
-      <Header />
+      <Header handleLogout={handleLogout} />
       <FileUpload
         handleUpload={handleUpload}
         handleCancelUpload={handleCancelUpload}

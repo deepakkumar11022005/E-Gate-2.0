@@ -1,8 +1,9 @@
 import React from 'react'
 
-const EntryForm = ({rollNumber,setRollNumber}) => {
+const EntryForm = ({rollNumber,setRollNumber,makeEntry}) => {
     function handleChange(e){
         setRollNumber(e.target.value)
+        makeEntry(rollNumber);
     }
   return (
     <form id="entryForm" method="get" name="rollNumber" action="entrySubmit">

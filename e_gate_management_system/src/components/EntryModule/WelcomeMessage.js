@@ -1,8 +1,8 @@
 import React from 'react';
 
-const WelcomeMessage = () => (
-    <div className="welcome">
-        {/* Logic to display welcome message */}
+const WelcomeMessage = ({ status }) => (
+    <div className={status ? "welcome_green" : "welcome_red"}>
+        {status ? "Welcome to KCE" : "Thank you, visit again"}
     </div>
 );
 

@@ -8,7 +8,7 @@ import Footer from '../components/Admin/Footer';
 import Loading from '../components/Admin/Loading';
 import Error from '../components/Admin/Error';
 
-const AdminSearchEntry = ({ API_URL }) => {
+const AdminSearchEntry = ({ API_URL,handleLogout }) => {
   // const [fromDate, setFromDate] = useState(new Date().toISOString().split('T')[0]);
   // const [toDate, setToDate] = useState(new Date().toISOString().split('T')[0]);
   // const [fromTime, setFromTime] = useState(new Date().toTimeString().split(' ')[0]);
@@ -18,12 +18,12 @@ const AdminSearchEntry = ({ API_URL }) => {
   const [fromTime, setFromTime] = useState(null);
   const [toTime, setToTime] = useState(null);
   const [rollNumber, setRollNumber] = useState("");
-  const [batch, setBatch] = useState("");
+  const [batch, setBatch] = useState([]);
   const [tableEntries, setTableEntries] = useState([]);
   const [filterCount, setFilterCount] = useState(0);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const [batchLoading,setBatchLoading]=useState(false);
   const handleSearch = () => {
 
     fetchData(); // Call fetchData when search is triggered
@@ -52,8 +52,30 @@ const AdminSearchEntry = ({ API_URL }) => {
     }
   };
 
+ const fetchBatch = async () => {
+    setBatchLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/filter`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        body: null
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setBatch(data.data);
+      } else {
+        throw new Error("Data not received");
+      }
+    } catch (error) {
+      setError(error.message);
+      console.error("Error fetching data:", error);
+    } finally {
+      setBatchLoading(false);
+    }
+  };
   useEffect(() => {
     fetchData();
+    fetchBatch();
   }, []);
 
   const handleCloseError = () => {
@@ -61,10 +83,11 @@ const AdminSearchEntry = ({ API_URL }) => {
     setLoading(false);
   };
   
+  
 
   return (
     <div>
-      <Header />
+      <Header handleLogout={handleLogout}/>
       <Filter
         fromDate={fromDate}
         toDate={toDate}
@@ -79,6 +102,7 @@ const AdminSearchEntry = ({ API_URL }) => {
         setRollNumber={setRollNumber}
         setBatch={setBatch}
         handleSearch={handleSearch}
+        batchLoading={batchLoading}
       />
 
       {loading ? (

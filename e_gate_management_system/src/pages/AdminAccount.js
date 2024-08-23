@@ -4,7 +4,7 @@ import AdminInfo from '../components/AdminAccount/AdminInfo';
 import PwdAndAdmin from '../components/AdminAccount/PwdAndAdmin';
 import Footer from '../components/Admin/Footer';
 
-const AdminAccount = ({ API_URL, email }) => {
+const AdminAccount = ({ API_URL, email,handleLogout }) => {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -148,7 +148,7 @@ const AdminAccount = ({ API_URL, email }) => {
 
   return (
     <div>
-      <Header />
+      <Header handleLogout={handleLogout}/>
       <AdminInfo email={email} />
       <PwdAndAdmin
         changePassword={changePassword}
