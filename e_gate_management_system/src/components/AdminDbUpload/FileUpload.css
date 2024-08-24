@@ -186,3 +186,14 @@
         width: 60vw;
     }
 }
+.file-indication {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  
+  .error-message {
+    color: red;
+    font-size: 0.9rem;
+  }

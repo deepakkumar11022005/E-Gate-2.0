@@ -2,48 +2,80 @@ import React from 'react';
 import './PersonInfoTable.css';
 import FilterCountAndDownload from '../AdminSearch/FilterCountAndDownload';
 
-const PersonInfoTable = ({tableEntries}) => {
-    // Sample data for demonstration purposes
-   
+const PersonInfoTable = ({currentEntries, totalEntries, pageSize, pageNo, onPageChange}) => {
+    
+    const totalPages = Math.ceil(totalEntries / pageSize);
 
+    const handlePrevPage = () => {
+      if (pageNo > 0) {
+        onPageChange(pageNo - 1);
+      }
+    };
+  
+    const handleNextPage = () => {
+      if (pageNo < totalPages - 1) {
+        onPageChange(pageNo + 1);
+      }
+    };
+  
+    const handlePageClick = (pageIndex) => {
+      onPageChange(pageIndex);
+    };
+  
     return (
-        <div className="person-info-container">
-           
-
-            {/* Row 2: Table */}
-            <div className="table-container">
-                <table className="person-info-table">
-                    <thead>
-                        <tr>
-                            <th>S.No</th>
-                            <th>Batch</th>
-                            <th>Roll Number</th>
-                            <th>Name</th>
-                            <th>Department</th>
-                            <th>In Date</th>
-                            <th>In Time</th>
-                            <th>Out Date</th>
-                            <th>Out Time</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {tableEntries.map((item, index) => (
-                            <tr key={index}>
-                                <td>{item.sno}</td>
-                                <td>{item.rollNum}</td>
-                                <td>{item.name}</td>
-                                <td>{item.inDate}</td>
-                                <td>{item.inTime}</td>
-                                <td>{item.outDate}</td>
-                                <td>{item.outTime}</td>
-                                <td>{item.status}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+      <div className="person-info-container">
+        <div className="table-container">
+          <table className="person-info-table">
+            <thead>
+              <tr>
+                <th>S.No</th>
+                <th>Batch</th>
+                <th>Roll Number</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>In Date</th>
+                <th>In Time</th>
+                <th>Out Date</th>
+                <th>Out Time</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentEntries.map((entry, index) => (
+                <tr key={index}>
+                  <td>{index + 1 + pageNo * pageSize}</td>
+                  <td>{}</td>
+                  <td>{entry.rollNumber}</td>
+                  <td>{entry.name}</td>
+                  <td>{entry.dept}</td>
+                  <td>{entry.inDate}</td>
+                  <td>{entry.inTime}</td>
+                  <td>{entry.outDate}</td>
+                  <td>{entry.outTime}</td>
+                  <td>{entry.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
+        <div className="pagination">
+          <button onClick={handlePrevPage} disabled={pageNo === 0}>
+            Previous
+          </button>
+          {[...Array(totalPages).keys()].map((pageIndex) => (
+            <button
+              key={pageIndex}
+              onClick={() => handlePageClick(pageIndex)}
+              className={pageIndex === pageNo ? 'active' : ''}
+            >
+              {pageIndex + 1}
+            </button>
+          ))}
+          <button onClick={handleNextPage} disabled={pageNo === totalPages - 1}>
+            Next
+          </button>
+        </div>
+      </div>
     );
 };
 

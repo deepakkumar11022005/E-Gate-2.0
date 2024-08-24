@@ -4,7 +4,7 @@ import FileUpload from '../components/AdminDbUpload/FileUpload';
 import ExcistingDb from '../components/AdminDbUpload/ExcistingDb';
 import Footer from '../components/Admin/Footer';
 
-const AdminDbUpload = ({ API_URL,handleLogout }) => {
+const AdminDbUpload = ({ API_URL, handleLogout, token }) => {
   const [existingBatch, setExistingBatch] = useState([]);
   const [uploadedBatchName, setUploadedBatchName] = useState("");
   const [uploadFile, setUploadFile] = useState(null);
@@ -16,13 +16,15 @@ const AdminDbUpload = ({ API_URL,handleLogout }) => {
   const postData = async () => {
     setUploading(true);
     try {
-      const response = await fetch(`${API_URL}/uploadFile`, {
+      const response = await fetch(`${API_URL}/kce/admin/batch/add?batch=${uploadedBatchName}&file=${uploadFile}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(uploadFile)
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+         } 
       });
       const data = await response.json();
-      if (response.ok && data.ResponseStatus === 'UPLOADED') {
+      if (data.code===201) {
         setUploading(false);
       } else {
         throw new Error("Error Occurred during upload");
@@ -35,16 +37,19 @@ const AdminDbUpload = ({ API_URL,handleLogout }) => {
     }
   };
 
-  const fetchData = async () => {
+  const fetchBatch = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/getBatchDetails`, {
+      const response = await fetch(`${API_URL}/kce/admin/bacth`, {
         method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
       });
-      const data = await response.json();
-      if (response.ok && data.ResponseStatus === 'SUCCESS') {
-        setExistingBatch(data);
+      const commonResponse = await response.json();
+      if (response.ok) {
+        setExistingBatch(commonResponse.data.records);
       } else {
         throw new Error("Error Occurred while fetching batch details");
       }
@@ -53,17 +58,12 @@ const AdminDbUpload = ({ API_URL,handleLogout }) => {
       console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
-      uploading = false;
+      setUploading(false);
     }
   };
 
   useEffect(() => {
-    // setExistingBatch([
-    //   'Batch_2020-2026',
-    //   'Batch_2018-2024',
-    //   'Batch_2017-2023',
-    // ]);
-    // fetchData();
+    fetchBatch();
   }, [uploading]);
 
   const handleUpload = () => {
@@ -93,6 +93,7 @@ const AdminDbUpload = ({ API_URL,handleLogout }) => {
         uploadedBatchName={uploadedBatchName}
         setUploadFile={setUploadFile}
         uploading={uploading}
+        uploadFile={uploadFile}
         error={error}
         handleCloseError={handleCloseError}
         setError={setError}

@@ -25,6 +25,8 @@
 .error-dialog-content h2 {
   margin: 0 0 10px;
   color: red;
+  text-align: start;
+  padding-left: 20px;
 }
 
 .error-dialog-content p {

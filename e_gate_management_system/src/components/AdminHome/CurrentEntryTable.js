@@ -42,10 +42,10 @@ const CurrentEntryTable = ({ currentEntries, totalEntries, pageSize, pageNo, onP
             {currentEntries.map((entry, index) => (
               <tr key={index}>
                 <td>{index + 1 + pageNo * pageSize}</td>
-                <td>{entry.batch}</td>
-                <td>{entry.rollNum}</td>
+                <td>{}</td>
+                <td>{entry.rollNumber}</td>
                 <td>{entry.name}</td>
-                <td>{entry.department}</td>
+                <td>{entry.dept}</td>
                 <td>{entry.inDate}</td>
                 <td>{entry.inTime}</td>
                 <td>{entry.outDate}</td>

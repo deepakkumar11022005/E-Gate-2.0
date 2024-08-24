@@ -3,13 +3,14 @@ import { useDropzone } from 'react-dropzone';
 import './FileUpload.css';
 import Error from '../Admin/Error';
 
-const FileUpload = ({ handleUpload,error,setError, setUploadedBatchName, handleCancelUpload, uploadedBatchName,handleCloseError, setUploadFile, uploading }) => {
+const FileUpload = ({ handleUpload, error, setError, setUploadedBatchName, handleCancelUpload, uploadedBatchName, handleCloseError, setUploadFile, uploading }) => {
   const [fileError, setFileError] = useState(null); // To handle file errors
+  const [selectedFileName, setSelectedFileName] = useState(''); // To handle selected file name
 
   const onDrop = useCallback(acceptedFiles => {
-     
     setUploadFile(acceptedFiles[0]);
-    setError(null)
+    setSelectedFileName(acceptedFiles[0].name); // Set selected file name
+    setError(null);
   }, [setUploadFile]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
@@ -20,7 +21,7 @@ const FileUpload = ({ handleUpload,error,setError, setUploadedBatchName, handleC
       setError('Please enter a batch name.');
       return;
     }
-    if (!getInputProps().value) {
+    if (!selectedFileName) {
       setError('Please upload a file before submitting.');
       return;
     }
@@ -31,7 +32,6 @@ const FileUpload = ({ handleUpload,error,setError, setUploadedBatchName, handleC
     <div className="fileupload-container">
       <h2>Upload Database</h2>
       <form className="fileupload-form" onSubmit={handleSubmit}>
-         
         <div className="input-group">
           <div className="batch-name">
             <label htmlFor="batch-name">Batch Name :</label>
@@ -59,7 +59,17 @@ const FileUpload = ({ handleUpload,error,setError, setUploadedBatchName, handleC
           {isDragActive ? (
             <p>Drop the files here ...</p>
           ) : (
-            <p>Drag and drop a file here, or click to select a file</p>
+            <div>
+              
+             
+              {selectedFileName ? (
+                <p className="file-indication">File selected: {selectedFileName}</p>
+              ) : (
+                <>
+                <p>Drag and drop a file here, or click to select a file</p>
+                <p className="file-indication">No file selected</p></>
+              )}
+            </div>
           )}
         </div>
 
@@ -72,7 +82,7 @@ const FileUpload = ({ handleUpload,error,setError, setUploadedBatchName, handleC
               <span className="uploading-circle">
                 <span className="circle"></span> Uploading...
               </span>
-            ) :  error ? (  <Error error={error} onClose={handleCloseError} />) :(
+            ) : error ? ( <Error error={error} onClose={handleCloseError} /> ) : (
               "Save and Upload"
             )}
           </button>

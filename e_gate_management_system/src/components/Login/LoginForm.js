@@ -2,23 +2,23 @@ import React, { useState } from 'react';
 import { Box, Button, TextField, Grid, Link, Typography } from '@mui/material';
 import GoogleIconSVG from './GoogleIconSVG';
 
-const LoginForm = ({ onSubmit, onForgotPassword, email, setEmail, password, setPassword }) => {
+const LoginForm = ({ onSubmit, onForgotPassword, email, setEmail, password, setPassword, loading }) => {
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const [showWarning, setShowWarning] = useState(false);
 
     const handleInputChange = (setter) => (e) => {
         setter(e.target.value);
         setIsButtonDisabled(!(email && password));
-        setShowWarning(false); // Reset warning when user types
+        setShowWarning(false);
     };
 
     const handleSignIn = (e) => {
-        e.preventDefault();  // This line requires the event object
+        e.preventDefault();
         if (!email || !password) {
             setShowWarning(true);
         } else {
             setShowWarning(false);
-            onSubmit();  // Call the onSubmit function passed as a prop
+            onSubmit();
         }
     };
 
@@ -90,7 +90,7 @@ const LoginForm = ({ onSubmit, onForgotPassword, email, setEmail, password, setP
                             padding: '8px',
                             borderRadius: '4px',
                             boxShadow: '0px 2px 5px rgba(0, 0, 0, 0.2)',
-                            backgroundColor: '#4CAF50', // Always green
+                            backgroundColor: '#4CAF50',
                             color: 'white',
                             '&:hover': {
                                 backgroundColor: '#45A049',
@@ -100,7 +100,9 @@ const LoginForm = ({ onSubmit, onForgotPassword, email, setEmail, password, setP
                             fontSize: "1rem",
                         }}
                     >
-                        Sign In
+                        {loading ? ("Signing In ....") : ("Sign In")}
+
+
                     </Button>
 
                     <Grid container>
@@ -112,8 +114,8 @@ const LoginForm = ({ onSubmit, onForgotPassword, email, setEmail, password, setP
                                 sx={{
                                     fontFamily: "'Montserrat', sans-serif",
                                     letterSpacing: '0.005em',
-                                    textAlign: "end",  
-                                    display: "block",  
+                                    textAlign: "end",
+                                    display: "block",
                                     paddingRight: "2rem",
                                     fontWeight: 500
                                 }}
@@ -151,7 +153,7 @@ const LoginForm = ({ onSubmit, onForgotPassword, email, setEmail, password, setP
                             color: '#357AE8',
                         },
                         fontFamily: "'Montserrat', sans-serif",
-                        // fontStretch: "extra-expanded",
+
                         fontSize: "1rem",
                     }}
                 >

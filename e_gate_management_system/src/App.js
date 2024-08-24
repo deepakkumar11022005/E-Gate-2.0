@@ -16,9 +16,9 @@ const App = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [email, setEmail] = useState("717822p212@kce.ac.in");
+    const [token, setToken] = useState(null);
 
     useEffect(() => {
-        // Determine the role based on the URL path
         if (location.pathname.includes('/admin')) {
             setRole('admin');
         } else if (location.pathname.includes('/entry')) {
@@ -28,7 +28,6 @@ const App = () => {
 
     const handleLogin = () => {
         setIsLoggedIn(true);
-        // Automatically navigate to the appropriate page based on the URL path
         if (role === 'admin') {
             navigate('/admin/home');
         } else if (role === 'Entry') {
@@ -38,26 +37,32 @@ const App = () => {
 
     const handleLogout = () => {
         setIsLoggedIn(false);
-        setRole(null); // Clear the role on logout
+        setRole(null);  
+        setToken(null);
         navigate('/');
     };
 
     if (!isLoggedIn) {
-        return <Login onLogin={handleLogin} />;
+        return <Login
+            onLogin={handleLogin}
+            API_URL={API_URL}
+            token={token}
+            setToken={setToken}
+        />;
     }
 
     return (
         <Routes>
             {/* Route for Admin */}
             <Route path="/admin">
-                <Route path="home" element={role === 'admin' ? <AdminHome API_URL={API_URL} handleLogout={handleLogout} /> : <Navigate to="/" />} />
-                <Route path="search" element={role === 'admin' ? <Search API_URL={API_URL} handleLogout={handleLogout} /> : <Navigate to="/" />} />
-                <Route path="manage-batch" element={role === 'admin' ? <ManageBatch API_URL={API_URL} handleLogout={handleLogout} /> : <Navigate to="/" />} />
-                <Route path="account" element={role === 'admin' ? <Account API_URL={API_URL} handleLogout={handleLogout} email={email} /> : <Navigate to="/" />} />
+                <Route path="home" element={role === 'admin' ? <AdminHome API_URL={API_URL} handleLogout={handleLogout} token={token} /> : <Navigate to="/" />} />
+                <Route path="search" element={role === 'admin' ? <Search API_URL={API_URL} handleLogout={handleLogout} token={token} /> : <Navigate to="/" />} />
+                <Route path="manage-batch" element={role === 'admin' ? <ManageBatch API_URL={API_URL} handleLogout={handleLogout} token={token} /> : <Navigate to="/" />} />
+                <Route path="account" element={role === 'admin' ? <Account API_URL={API_URL} handleLogout={handleLogout} email={email} token={token} /> : <Navigate to="/" />} />
             </Route>
 
             {/* Route for Entry */}
-            <Route path="/entry" element={role === 'Entry' ? <Entry API_URL={API_URL} /> : <Navigate to="/" />} />
+            <Route path="/entry" element={role === 'Entry' ? <Entry API_URL={API_URL} token={token} /> : <Navigate to="/" />} />
 
             {/* Default Route: Redirect to correct home based on role */}
             <Route path="/" element={<Navigate to={role === 'admin' ? "/admin/home" : role === 'Entry' ? "/entry" : "/"} />} />

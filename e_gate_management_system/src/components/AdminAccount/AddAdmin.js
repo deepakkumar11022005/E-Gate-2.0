@@ -18,9 +18,9 @@ const AddAdmin = ({
     if (addAdminError) {
       const timer = setTimeout(() => {
         setAddAdminError(false);
-      }, 3000); // Hides the error message after 3 seconds
+      }, 3000);  
 
-      return () => clearTimeout(timer); // Cleanup timeout if the component unmounts
+      return () => clearTimeout(timer);  
     }
   }, [addAdminError, setAddAdminError]);
 

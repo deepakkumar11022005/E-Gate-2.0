@@ -37,7 +37,7 @@ const ChangePassword = ({
                 return;
             }
             else {
-                const isValid = await verifyAndChangePassword(oldPassword, newPassword, confirmPassword);
+                const isValid = await verifyAndChangePassword(oldPassword, newPassword);
                 if (isValid) {
 
                     await sendOtp();

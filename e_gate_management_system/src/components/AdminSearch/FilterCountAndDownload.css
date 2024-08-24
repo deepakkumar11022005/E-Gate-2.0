@@ -1,0 +1,11 @@
+.count-download {
+    min-width: calc(fit-content + 200px);
+    /* background-color: aqua; */
+}
+
+.download-btn{
+    min-width: fit-content;
+}
+.total-entries{
+    min-width: fit-content;
+}

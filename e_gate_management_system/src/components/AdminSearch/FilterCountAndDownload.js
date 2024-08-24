@@ -1,6 +1,6 @@
 import React from 'react'
-
-const FilterCountAndDownload = ({filterCount}) => {
+import "./FilterCountAndDownload.css"
+const FilterCountAndDownload = ({filterCount,handleDownload,loading}) => {
   return (
     <>
       
@@ -11,7 +11,9 @@ const FilterCountAndDownload = ({filterCount}) => {
                 </div>
                 <div className="count-download">
                     <span className='total-entries'>Total Entries: {filterCount}</span>
-                    <button className="download-btn">Download</button>
+                    <button className="download-btn" onClick={handleDownload}>
+                      {loading ?("Downloading"):("Download")}
+                      </button>
                 </div>
             </div>
     </>

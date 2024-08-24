@@ -18,12 +18,12 @@ const Filter = ({
   batchLoading
 }) => {
 
-  // Handler to update state values
+   
   const handleInputChange = (e, setter) => {
     setter(e.target.value);
   };
 
-  // Handler for form submission
+ 
   const onSubmit = (e) => {
     e.preventDefault();
     handleSearch();
@@ -112,8 +112,8 @@ const Filter = ({
               
               <option value="">Select Batch</option>
               {batchLoading ? (<Loading/>):(
-                batch.map((year)=>{
-                  <option value="batch1">year</option>
+                batch.map(( obj)=>{
+                  <option value="batch1">(obj.batchName)</option>
                 })
               
               

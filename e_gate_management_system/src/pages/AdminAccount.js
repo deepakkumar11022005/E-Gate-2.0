@@ -4,7 +4,7 @@ import AdminInfo from '../components/AdminAccount/AdminInfo';
 import PwdAndAdmin from '../components/AdminAccount/PwdAndAdmin';
 import Footer from '../components/Admin/Footer';
 
-const AdminAccount = ({ API_URL, email,handleLogout }) => {
+const AdminAccount = ({ API_URL, email, handleLogout, token }) => {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -12,17 +12,20 @@ const AdminAccount = ({ API_URL, email,handleLogout }) => {
   const [newAdminEmail, setNewAdminEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [addAdminError ,setAddAdminError]=useState(null);
-  const [addAdminLoading,setAddAdminLoading]=useState(false)
-  const verifyAndChangePassword = async (oldPassword,newPassword,confirmPassword) => {
+  const [addAdminError, setAddAdminError] = useState(null);
+  const [addAdminLoading, setAddAdminLoading] = useState(false)
+
+  const verifyAndChangePassword = async (oldPassword, newPassword) => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/admin/verify-password`, {
-        method: 'POST',
+      const response = await fetch(`${API_URL}/kce/admin/pwd/change`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ email, oldPassword }),
+        body:JSON.stringify({email,oldPassword,newPassword})
+
       });
 
       const data = await response.json();
@@ -119,36 +122,34 @@ const AdminAccount = ({ API_URL, email,handleLogout }) => {
   };
 
   const handleAddAdmin = async (newAdminEmail) => {
-     setAddAdminLoading(true);
-     try {
-      const response = await fetch(`${API_URL}/admin/add-admin`, {
+    setAddAdminLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/kce/admin/add?email=${newAdminEmail}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ email, otp }),
       });
-
+      const commonResponse = await response.json();
+      
       if (response.ok) {
-   
-        setAddAdminError(null);
         return true;
       } else {
-        const data = await response.json();
-        setAddAdminError(data.errorMessage || "Something went Wrong! Please try Again");
+        setAddAdminError(commonResponse.errorMessage || "Something went wrong! Please try again.");
         return false;
       }
     } catch (error) {
-      setAddAdminError(error.message);
-      return true;
+      setAddAdminError(error.message || "An unexpected error occurred.");
+      return false; 
     } finally {
       setAddAdminLoading(false);
     }
   };
-
+  
   return (
     <div>
-      <Header handleLogout={handleLogout}/>
+      <Header handleLogout={handleLogout} />
       <AdminInfo email={email} />
       <PwdAndAdmin
         changePassword={changePassword}
@@ -172,7 +173,7 @@ const AdminAccount = ({ API_URL, email,handleLogout }) => {
         otp={otp}
         setOtp={setOtp}
         addAdminLoading={addAdminLoading}
-        
+
       />
       <Footer />
     </div>

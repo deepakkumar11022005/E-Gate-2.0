@@ -36,8 +36,9 @@ body {
  
 .container {
 	width: 70% !important;
-	height: 90vh;
-	 margin: 0;
+	height: 93vh !important;
+	 margin-top: 20px !important;
+	 padding: 0 !important;
 	background-color: #fff;
 	border-radius: 8px;
 	box-shadow: 0 0 25px rgba(95, 2, 2, 0.1);
@@ -110,6 +111,9 @@ h1 {
 }
 
 #details {
+	width: 96%;
+	margin-left: auto;
+	margin-right: auto;
 	margin-top: 20px;
 	padding: 15px;
 	border-radius: 5px;
@@ -187,7 +191,7 @@ h3 {
 
 .person_info {
 	display: flex;
-	width: 100%;
+	width: 85%;
 	font-size: 17px;
 	/* margin-top: -10px; */
 }
@@ -200,13 +204,22 @@ h3 {
 	 /* background-color: azure; */
 }
 .person_info_answer_from_db{
-	width: 50%;
+	min-width: fit-content;
 	font-weight: 500;
      font-size: 20px ;
+	 text-align: start;
+	 /* background-color: aquamarine; */
 }
 .person_info_span {
 	padding: 2px;
 	max-width: 170px;
+	display: flex;
+	font-size: 18px;
+	justify-content: space-between;
+}
+.person_ans_span{
+	padding: 2px;
+	max-width: 400px;
 	display: flex;
 	font-size: 18px;
 	justify-content: space-between;
@@ -218,9 +231,7 @@ h3 {
 	opacity: 0.5;
 }
 
-.person_info_answer_from_db {
-	width: 50%;
-}
+ 
 
 @media screen and (max-width: 1800px) {}
 
@@ -240,11 +251,11 @@ h3 {
 
 @media screen and (max-width: 400px) {}
 .welcome_green {
-    height: 60px;
+    height: 60px !important;
     text-align: center;
     background-color: rgb(5, 250, 21);
     border-radius: 7px;
-    display: flex;
+    display: flex; 
     justify-content: center;
     align-items: center;
     margin-top: 5px;
@@ -254,7 +265,7 @@ h3 {
 }
 
 .welcome_red {
-    height: 60px;
+    height: 60px !important;
     text-align: center;
     background-color: rgb(250, 2, 2);
     border-radius: 7px;
