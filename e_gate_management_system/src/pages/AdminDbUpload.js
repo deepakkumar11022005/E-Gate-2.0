@@ -11,7 +11,8 @@ const AdminDbUpload = ({ API_URL, handleLogout, token }) => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const [fileError, setFileError] = useState(null);  
+  const [selectedFileName, setSelectedFileName] = useState(''); 
 
   const postData = async () => {
     setUploading(true);
@@ -80,7 +81,7 @@ const AdminDbUpload = ({ API_URL, handleLogout, token }) => {
     setUploading(false);
     setUploadFile(null);
     setUploadedBatchName("");
-
+    setSelectedFileName("");
   };
 
 
@@ -98,6 +99,10 @@ const AdminDbUpload = ({ API_URL, handleLogout, token }) => {
         handleCloseError={handleCloseError}
         setError={setError}
         setUploadedBatchName={setUploadedBatchName}
+        fileError={fileError}
+        setFileError={setFileError}
+        selectedFileName={selectedFileName}
+        setSelectedFileName={setSelectedFileName}
       />
       <ExcistingDb
         handleCloseError={handleCloseError}

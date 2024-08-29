@@ -1,5 +1,4 @@
-.container {
-    
+.account-container {
     padding: 10px 10px;
     border-radius: 12px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
@@ -9,14 +8,14 @@
     display: flex;
     flex-direction: column;
     font-family: 'Montserrat', sans-serif;
-    /* background-color: aqua; */
+    background: linear-gradient(#bff54cbd 5%, #f2f48265 100%);
+
 }
 
 .roundImage {
     border-radius: 50%;
     width: 150px;
     height: 150px;
-     
 }
 .details{
     display: flex;

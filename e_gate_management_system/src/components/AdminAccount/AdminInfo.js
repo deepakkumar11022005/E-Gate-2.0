@@ -5,14 +5,13 @@ const AdminInfo = ({email}) => {
  
 
     return (
-        <div className="container">
+        <div className="account-container">
             <h2>Account Info</h2>
             <div className="main">
                 <div className="infoContainer">
                     <div className='details'>
                         <span className='username'>{email}</span>
                     </div>
-
                 </div>
             </div>
         </div>
