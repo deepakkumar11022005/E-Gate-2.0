@@ -7,18 +7,30 @@ const LeftSidebar = () => (
     <Box
         sx={{
             width: { xs: '100%', md: '55%' },
-            background: 'linear-gradient(240deg, #fcaf08 25%, #CA6A00 100%)',
             display: 'flex',
-            boxShadow: '3px 4px 5px 1px rgba(0,0,0,0.3)',
             flexDirection: 'column',
-            alignItems: 'center',
+            alignItems: 'center', 
             justifyContent: 'center',
             padding: 4,
             position: 'relative',
             overflow: 'hidden',
-            clipPath: { xs: 'none', md: 'polygon(0% 0%, 100% 0%, 67% 20%, 0% 100%)' },
         }}
     >
+        {/* Background Layer */}
+        <Box
+            sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(240deg, #fcaf08 25%, #CA6A00 100%)',
+                clipPath: { xs: 'none', md: 'polygon(0% 0%, 100% 0%, 67% 20%, 0% 100%)' },
+                // zIndex: 1,  
+                boxShadow: '3px 4px 5px 1px rgba(0,0,0,0.3)',
+            }}
+        />
+
         {/* ID Card Image */}
         <Box
             component="img"
@@ -27,10 +39,11 @@ const LeftSidebar = () => (
             sx={{
                 width: '50%',
                 height: 'auto',
-                // marginLeft: '2.7%',
                 marginBottom: 2,
                 position: 'relative',
-                zIndex: 2,  
+                // zIndex: 1, 
+               
+                
             }}
         />
 
@@ -43,14 +56,13 @@ const LeftSidebar = () => (
                 WebkitTextFillColor: 'transparent',
                 fontWeight: 'bold',
                 fontSize: { xs: 24, md: 46 },
-                textAlign: 'left',
-                margin: 2,
-                marginLeft: -5,
+                textAlign: { xs: 'center', md: 'left' },
+                marginX: { xs: 2, md: 0 },
+                marginY: 2,
                 fontFamily: "'Montserrat', sans-serif",
                 fontStretch: "extra-expanded",
-                fontSize: "2.5rem",
                 position: 'relative',
-                zIndex: 2,  
+                // zIndex: 2,  
             }}
         >
             E-Gate Management System
@@ -62,9 +74,10 @@ const LeftSidebar = () => (
             sx={{
                 fontFamily: "Cambria, Cochin, Georgia, Times, 'Times New Roman', serif",
                 color: 'black',
-                fontSize: 18,
-                textAlign: 'left',
-                marginLeft: 5,
+                fontSize: { xs: 16, md: 18 },
+                textAlign: { xs: 'center', md: 'left' },
+                marginX: { xs: 2, md: 2 },
+                marginBottom: -10, // Adding marginBottom to push the text 100px down
                 position: 'relative',
                 zIndex: 2,  
             }}

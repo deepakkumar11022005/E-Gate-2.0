@@ -1,10 +1,11 @@
 .message-dialog-overlay {
+  z-index: 100;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.8); /* Solid black with less transparency */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,17 +18,23 @@
   border-radius: 8px;
   text-align: center;
   min-width: 40vw;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3); /* Add shadow for better visibility */
 }
 
 .message-dialog-content h2 {
   margin: 0 0 10px;
-  color: blue;  /* Updated header color */
+  color: red; /* Ensure the color is applied correctly */
+  text-align: start;
+  padding-left: 20px;
+  padding-top: 5px;
 }
-.message-body{
+
+.message-body {
   padding: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: rgb(31, 31, 31) !important;
 }
 
 .message-dialog-content p {
@@ -38,50 +45,39 @@
 }
 
 .button-group {
-  width: 40%;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px; 
-  margin-top: 20px; /* Space between buttons */
+  gap: 10px;
+  margin-top: 30px;
+  width: 100%;
 }
- 
+
 .button-group > button {
   flex: 1;
-  max-width: 150px;   
-  margin: 0 5px;  
-}
-
-.button-group > button:first-child:last-child {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-
-.ok-btn {
-  background-color: green;  /* Green background for Ok button */
-  color: white;
-  border: none;
+  max-width: 120px;
+  padding: 10px 15px;
   border-radius: 4px;
-  padding: 10px 20px;
   cursor: pointer;
   font-family: inherit;
+  border: none;
+  text-align: center;
+}
+
+.ok-btn {
+  background-color: green;
+  color: white;
 }
 
 .ok-btn:hover {
-  background-color: darkgreen;  /* Darker green on hover */
+  background-color: darkgreen;
 }
 
 .close-btn {
-  background-color: red;  /* Red background for Close button */
+  background-color: blue;
   color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-family: inherit;
 }
 
 .close-btn:hover {
-  background-color: darkred;  /* Darker red on hover */
+  background-color: darkblue;
 }

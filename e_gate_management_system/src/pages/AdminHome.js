@@ -32,6 +32,7 @@ const AdminHome = ({ API_URL, handleLogout, token }) => {
         },
       });
 
+      
       const commonResponse = await response.json();
 
       if (response.ok) {
@@ -47,6 +48,8 @@ const AdminHome = ({ API_URL, handleLogout, token }) => {
         throw new Error(commonResponse.errorMessage || "Unexpected error occurred");
       }
     } catch (error) {
+      console.log("count .................");
+      
       setError(error.message);
     } finally {
       setLoading(false);
@@ -74,6 +77,7 @@ const AdminHome = ({ API_URL, handleLogout, token }) => {
         throw new Error(commonResponse.errorMessage || "Unexpected error occurred");
       }
     } catch (error) {
+      console.log("details .................");
       setError(error.message);
     } finally {
       setLoading(false);

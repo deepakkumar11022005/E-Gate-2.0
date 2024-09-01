@@ -1,17 +1,15 @@
 import React from 'react';
 import scanningImg from '../../images/scanning.gif';
-import Error from '../Admin/Error';
 import Message from '../Admin/Message';
 
-
-const PersonDetails = ({ rollNumber, name, department, batch,inDate,outDate,inTime,outTime ,error,handleCloseMsg}) => (
+const PersonDetails = ({ rollNumber, name, department, batch, inDate, outDate, inTime, outTime, error, handleCloseMsg }) => (
     <div id="details">
         {error && (
             <Message
-            message={error.message}
-            buttons={[
-                { label: 'Ok', onClick: handleCloseMsg, className: 'ok-btn' }
-            ]}
+                message={error}  
+                buttons={[
+                    { label: 'Ok', onClick: handleCloseMsg, className: 'ok-btn' }
+                ]}
             />
         )}
         <div className="person_details">
@@ -30,9 +28,8 @@ const PersonDetails = ({ rollNumber, name, department, batch,inDate,outDate,inTi
                     <div className="person_ans_span">{name}</div>
                     <div className="person_ans_span">{department}</div>
                     <div className="person_ans_span">{batch}</div>
-                    <div className="person_ans_span">{ inDate +"   "+inTime}</div>
-                    <div className="person_ans_span">{outDate+"   "+outTime}</div>
-                    
+                    <div className="person_ans_span">{inDate + " " + inTime}</div>
+                    <div className="person_ans_span">{outDate + " " + outTime}</div>
                 </div>
             </div>
         </div>

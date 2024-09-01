@@ -3,9 +3,9 @@ import { useDropzone } from 'react-dropzone';
 import './FileUpload.css';
 import Error from '../Admin/Error';
 
-const FileUpload = ({ handleUpload, fileError, setSelectedFileName, selectedFileName, setFileError, error, setError, setUploadedBatchName, handleCancelUpload, uploadedBatchName, handleCloseError, setUploadFile, uploading }) => {
+const FileUpload = ({ handleUpload, fileError, setSelectedFileName, selectedFileName, setFileError, error, setError, setUploadedBatchName, handleCancelUpload, uploadedBatchName, handleCloseError, setUploadFile, uploadFile,uploading }) => {
 
-
+  const [fileUploadMsg,setFileUploadMsg]=useState(false);
   const onDrop = useCallback(acceptedFiles => {
     setUploadFile(acceptedFiles[0]);
     setSelectedFileName(acceptedFiles[0].name);
@@ -24,7 +24,12 @@ const FileUpload = ({ handleUpload, fileError, setSelectedFileName, selectedFile
       setError('Please upload a file before submitting.');
       return;
     }
-    handleUpload();
+    if(!uploadFile){
+      setError('Please upload a file before submitting.');
+    }
+    if(handleUpload()){
+     setFileUploadMsg(true);
+    }
   };
 
   return (

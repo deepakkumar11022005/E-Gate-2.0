@@ -9,12 +9,15 @@ const AdminAccount = ({ API_URL, email, handleLogout, token }) => {
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [otp, setOtp] = useState('');
-  const [newAdminEmail, setNewAdminEmail] = useState("");
+  const [newAdminEmail, setNewAdminEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [addAdminError, setAddAdminError] = useState(null);
-  const [addAdminLoading, setAddAdminLoading] = useState(false)
+  const [addAdminLoading, setAddAdminLoading] = useState(false);
+  const [uniqueId, setUniqueId] = useState('');
+  const [AddAdminMsg, setAddAdminMsg] = useState('');
 
+  // Function to verify the old password and change it to the new password
   const verifyAndChangePassword = async (oldPassword, newPassword) => {
     setLoading(true);
     try {
@@ -24,19 +27,20 @@ const AdminAccount = ({ API_URL, email, handleLogout, token }) => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body:JSON.stringify({email,oldPassword,newPassword})
-
+        body: JSON.stringify({ email, oldPassword, newPassword })
       });
 
       const data = await response.json();
 
-      if (response.ok && data.ResponseStatus === 'SUCCESS') {
+      if (response.ok) {
+        setError(null);
         return true;
       } else {
-        setError(data.errorMessage || "Invalid old password");
+        // setError(data.errorMessage || "Failed to change password.");
         return false;
       }
     } catch (error) {
+      // Log any unexpected errors
       setError(error.message);
       return false;
     } finally {
@@ -44,83 +48,109 @@ const AdminAccount = ({ API_URL, email, handleLogout, token }) => {
     }
   };
 
-  const changePassword = async (newPassword) => {
-    setLoading(true);
-    try {
-      const response = await fetch(`${API_URL}/admin/change-password`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, newPassword }),
-      });
-
-      if (response.ok) {
-        setError(null);
-        // Handle success, e.g., logout or show a success message
-      } else {
-        const data = await response.json();
-        setError(data.errorMessage || "Failed to change password");
-      }
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Function to send OTP to the email
   const sendOtp = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/admin/send-otp`, {
+      const response = await fetch(`${API_URL}/auth/pwd/forgot?email=${email}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       if (response.ok) {
         setError(null);
-        // Handle OTP sent success
       } else {
         const data = await response.json();
-        setError(data.errorMessage || "Failed to send OTP");
+        setError(data.errorMessage || "Failed to send OTP.");
       }
     } catch (error) {
+      // Log any unexpected errors
       setError(error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  const verifyOtp = async (otp) => {
+  // Function to change the password after OTP verification
+  const changePasswordAfterOtpverification = async (newPassword, uniqueId) => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/admin/verify-otp`, {
+      const response = await fetch(`${API_URL}/auth/pwd/change/${uniqueId}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email, otp }),
+        body: JSON.stringify({ email, password: newPassword }),
       });
+
+      const data = await response.json();
 
       if (response.ok) {
         setError(null);
         return true;
       } else {
-        const data = await response.json();
-        setError(data.errorMessage || "Invalid OTP");
+        setError(data.errorMessage || "Failed to change password after OTP verification.");
         return false;
       }
     } catch (error) {
+      // Log any unexpected errors
       setError(error.message);
-      return true;
+      return false;
     } finally {
       setLoading(false);
     }
   };
 
+  // Function to verify OTP
+  const verifyOtp = async (otp) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`${API_URL}/auth/pwd/otp/verify`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ email, otp }),
+      });
+
+      if (response.ok) {
+        const commonResponse = await response.json();
+        setUniqueId(commonResponse.data);
+        setError(null);
+
+        // Proceed to change password after OTP verification
+        const status = await changePasswordAfterOtpverification(newPassword, commonResponse.data);
+        if (status) {
+          return true;
+        } else {
+          setError("Password change failed. Please try again.");
+          return false;
+        }
+      } else if (response.status === 500) {
+        // Handle 500 Internal Server Error
+        setError("Server error occurred while verifying OTP. Please try again later.");
+        console.error("Internal Server Error: ", await response.text()); // Log detailed server error (if any)
+        return false;
+      } else {
+        const data = await response.json();
+        setError(data.errorMessage || "OTP verification failed. Please check the OTP and try again.");
+        return false;
+      }
+    } catch (error) {
+      // Log any unexpected errors
+      setError("An unexpected error occurred. Please try again.");
+      console.error("Error verifying OTP: ", error); // Log detailed error for debugging
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Function to handle adding a new admin
   const handleAddAdmin = async (newAdminEmail) => {
     setAddAdminLoading(true);
     try {
@@ -132,27 +162,28 @@ const AdminAccount = ({ API_URL, email, handleLogout, token }) => {
         },
       });
       const commonResponse = await response.json();
-      
+
       if (response.ok) {
+        setAddAdminError('');
+        setAddAdminMsg(commonResponse.successMessage);
         return true;
       } else {
-        setAddAdminError(commonResponse.errorMessage || "Something went wrong! Please try again.");
+        setAddAdminError(commonResponse.errorMessage || "Failed to add new admin.");
         return false;
       }
     } catch (error) {
       setAddAdminError(error.message || "An unexpected error occurred.");
-      return false; 
+      return false;
     } finally {
       setAddAdminLoading(false);
     }
   };
-  
+
   return (
     <div>
       <Header handleLogout={handleLogout} />
       <AdminInfo email={email} />
       <PwdAndAdmin
-        changePassword={changePassword}
         verifyAndChangePassword={verifyAndChangePassword}
         handleAddAdmin={handleAddAdmin}
         sendOtp={sendOtp}
@@ -172,8 +203,10 @@ const AdminAccount = ({ API_URL, email, handleLogout, token }) => {
         setAddAdminError={setAddAdminError}
         otp={otp}
         setOtp={setOtp}
+        setAddAdminLoading={setAddAdminLoading}
         addAdminLoading={addAdminLoading}
-
+        AddAdminMsg={AddAdminMsg}
+        setAddAdminMsg={setAddAdminMsg}
       />
       <Footer />
     </div>

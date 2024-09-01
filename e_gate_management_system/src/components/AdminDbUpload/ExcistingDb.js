@@ -17,9 +17,9 @@ const ExistingDb = ({ existingBatch, error, loading, handleCloseError }) => {
             {existingBatch.length < 1 ? (
               <li className="db-item">No Batch Found</li>
             ) : (
-              existingBatch.map((batch, index) => (
-                <li key={index} className="db-item">
-                  {batch}
+              existingBatch.map((obj) => (
+                <li key={obj.uniqueId} className="db-item">
+                  {obj.batchName}
                 </li>
               ))
             )}

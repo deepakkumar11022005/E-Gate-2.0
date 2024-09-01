@@ -24,7 +24,10 @@ const PwdAndAdmin = ({
   handleAddAdmin,
   addAdminError,
   setAddAdminError,
-  addAdminLoading
+  addAdminLoading,
+  AddAdminMsg,
+  setAddAdminMsg,
+  setAddAdminLoading,
 }) => {
   return (
     <div className="container-flex">
@@ -53,6 +56,9 @@ const PwdAndAdmin = ({
         addAdminLoading={addAdminLoading}
         addAdminError={addAdminError}
         setAddAdminError={setAddAdminError}
+        AddAdminMsg={AddAdminMsg}
+        setAddAdminMsg={setAddAdminMsg}
+        setAddAdminLoading={setAddAdminLoading}
       />
     </div>
   );

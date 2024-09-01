@@ -3,6 +3,7 @@ import Loading from './Loading';
 import './OtpVerification.css'; // Updated CSS
 
 const OtpVerification = ({
+  togetEmailOrNot,
   handleSendOtp,
   otp,
   setOtp,
@@ -13,12 +14,12 @@ const OtpVerification = ({
   setShowExpiresMsg,
   handleChangePassword
 }) => {
-  const [timeLeft, setTimeLeft] = useState(10); // 10 seconds for demonstration
-  const [email, setEmail] = useState(''); // State for email
-  const [otpSent, setOtpSent] = useState(false); // State to check if OTP has been sent
-  const [otpVerified, setOtpVerified] = useState(false); // State to check if OTP is verified
-  const [newPassword, setNewPassword] = useState(''); // State for new password
-  const [confirmPassword, setConfirmPassword] = useState(''); // State for confirm password
+  const [timeLeft, setTimeLeft] = useState(5*60);  
+  const [email, setEmail] = useState('');  
+  const [otpSent, setOtpSent] = useState(false);  
+  const [otpVerified, setOtpVerified] = useState(false);  
+  const [newPassword, setNewPassword] = useState(''); 
+  const [confirmPassword, setConfirmPassword] = useState('');  
 
   useEffect(() => {
     if (timeLeft <= 0) {
@@ -34,29 +35,30 @@ const OtpVerification = ({
     return () => clearInterval(timer);
   }, [timeLeft, setShowOtpBox]);
 
-  const handleSendOtpStatus = () => {
-    if (handleSendOtp(email)) {
+  const handleSendOtpStatus = async () => {
+    const response=await handleSendOtp(email);
+    if (response) {
       setOtpSent(true);
       setTimeLeft(10);
     }
   };
 
-  const handleOtpVerification = (e) => {
+  const handleOtpVerification = async(e) => {
     e.preventDefault();
-   if(onSubmit(email,otp)) {
-    setOtpVerified(true);
-   }
-   
+    const response= await onSubmit(email, otp);
+    if (response) {
+      setOtpVerified(true);
+    }
   };
 
-  const handlePasswordSubmit = (e) => {
+  const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
       alert("Passwords do not match");
       return;
     }
-    
-     handleChangePassword(email,newPassword);
+
+     await handleChangePassword(email, newPassword);
   };
 
   return (
@@ -64,32 +66,34 @@ const OtpVerification = ({
       <div className="otp-modal">
         <h2 className="otp-title">OTP Verification</h2>
 
-        {!otpSent ? (
-          <div className="send-otp-container">
-            <div className="input_group">
-              <label className="email-label" htmlFor="email">Enter your email:</label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                className="email-input"
-                onChange={(e) => setEmail(e.target.value)}
-                aria-label="Email"
-                placeholder="Enter your email here"
-              />
+        {!otpSent && togetEmailOrNot ? (
+          <form onSubmit={handleSendOtpStatus}>
+            <div className="send-otp-container">
+              <div className="input_group">
+                <label className="email-label" htmlFor="email">Enter your email:</label>
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  required
+                  className="email-input"
+                  onChange={(e) => setEmail(e.target.value)}
+                  aria-label="Email"
+                  placeholder="Enter your email here"
+                />
+              </div>
+              <div className="btn-body">
+                {error && <p className="error-message">{error}</p>}
+                <button
+                  type="submit"
+                  className="send-otp-btn"
+                  aria-label="Send OTP"
+                >
+                  Send OTP
+                </button>
+              </div>
             </div>
-            <div className="btn-body">
-              {error && <p className="error-message">{error}</p>}
-              <button
-                type="button"
-                className="send-otp-btn"
-                onClick={handleSendOtpStatus}
-                aria-label="Send OTP"
-              >
-                Send OTP
-              </button>
-            </div>
-          </div>
+          </form>
         ) : !otpVerified ? (
           <form className="otp-form" onSubmit={handleOtpVerification}>
             {loading ? (
@@ -124,7 +128,7 @@ const OtpVerification = ({
               </div>
             )}
           </form>
-        ) : (
+        ) : togetEmailOrNot ? (
           <form className="otp-form" onSubmit={handlePasswordSubmit}>
             <div className="input_group">
               <label className="otp-label" htmlFor="new-password">New Password:</label>
@@ -156,10 +160,14 @@ const OtpVerification = ({
               </button>
             </div>
           </form>
-        )}
+        ) : null}
       </div>
     </div>
   );
+};
+
+OtpVerification.defaultProps = {
+  togetEmailOrNot: true,
 };
 
 export default OtpVerification;

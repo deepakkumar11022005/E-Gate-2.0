@@ -9,7 +9,7 @@
     font-family: 'Montserrat', sans-serif;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* Ensure the modal is on top */
+    z-index: 3; /* Ensure the modal is on top */
 }
 
 .otp-modal {

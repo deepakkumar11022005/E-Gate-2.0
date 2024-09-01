@@ -1,5 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './AddAdmin.css';
+import Message from '../Admin/Message';
+import Error from '../Admin/Error';
 
 const AddAdmin = ({
   newAdminEmail,
@@ -8,26 +10,46 @@ const AddAdmin = ({
   addAdminError,
   setAddAdminError,
   addAdminLoading,
+  AddAdminMsg,
+  setAddAdminMsg,
+  setAddAdminLoading
 }) => {
-  const handleSubmit = (e) => {
+  const [AddAdminMsgSuccess, setAddAdminMsgSuccess] = useState(false);
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    handleAddAdmin(newAdminEmail);
+    const success = await handleAddAdmin(newAdminEmail);
+    if (success)  {
+      setAddAdminError(null);
+      setNewAdminEmail("");
+      setAddAdminLoading(false);
+      setAddAdminMsgSuccess(true);
+    }
+    else {
+      setAddAdminLoading(false);
+      // setAddAdminError("Invalid Email");
+    }
   };
 
-  useEffect(() => {
-    if (addAdminError) {
-      const timer = setTimeout(() => {
-        setAddAdminError(false);
-      }, 3000);  
+ 
 
-      return () => clearTimeout(timer);  
-    }
-  }, [addAdminError, setAddAdminError]);
 
+  const handleOkMessage = () => {
+    setAddAdminMsgSuccess(false);
+    setAddAdminMsg(null);
+  }
+  const handleCancelMessage = () => {
+    setAddAdminError(null);
+  }
   return (
     <div className="add-admin-container">
+      {AddAdminMsgSuccess && <Message
+        message={AddAdminMsg}
+        buttons={[
+          { label: 'Ok', onClick: handleOkMessage, className: 'ok-btn' }
+        ]}
+      />}
       {addAdminError && (
-        <div className="error-message">An error occurred. Please try again.</div>
+         <Error error={addAdminError} onClose={handleCancelMessage}/>
       )}
       <h2 className="title">Add Admin</h2>
       <form onSubmit={handleSubmit} className="admin-form">
@@ -53,7 +75,7 @@ const AddAdmin = ({
             rights. You will face all consequences of this action.
           </p>
         </div>
-        <button type="submit" className="add-admin-btn">
+        <button   className="add-admin-btn">
           {addAdminLoading ? 'Adding...' : 'Add Admin'}
         </button>
       </form>

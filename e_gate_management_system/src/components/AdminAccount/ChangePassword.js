@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Loading from '../Admin/Loading';
+import Error from '../Admin/Error.js';
 import Message from '../Admin/Message';
 import './ChangePassword.css';  // Ensure this path is correct
 import OtpVerification from '../Admin/OtpVerification.js';
@@ -21,33 +22,25 @@ const ChangePassword = ({
     setOtp,
     setError
 }) => {
-    const [showMessage, setShowMessage] = useState(false);
     const [step, setStep] = useState(1);
     const [showOtpBox, setShowOtpBox] = useState(false);
-    const [showExpiresMsg, setShowExpiresMsg] = useState(false);
+    const [togetEmailOrNot, setTogetEmailOrNot] = useState(false);
     const [passwordChangedMsg, setPasswordChangedMsg] = useState(false);
-    // useEffect(()=>{
-
-    // },[showExpiresMsg,showMessage]);
 
     const handlePasswordSubmit = async () => {
-        try {
-            if (newPassword !== confirmPassword) {
-                setError('New password and confirm password do not match.');
-                return;
-            }
-            else {
-                const isValid = await verifyAndChangePassword(oldPassword, newPassword);
-                if (isValid) {
+        if (newPassword !== confirmPassword) {
+            setError('New password and confirm password do not match.');
+            return;
+        }
 
-                    await sendOtp();
-                    setStep(2);
-                    setShowOtpBox(true);
-                    setError(null);
-                } else {
-                    // setError('Incorrect old password.');
-                    setShowMessage(true);
-                }
+        try {
+            const isValid = await verifyAndChangePassword(oldPassword, newPassword);
+            if (!isValid) {
+                await sendOtp();
+                setStep(2);
+                setShowOtpBox(true);
+            } else {
+                setPasswordChangedMsg(true);
             }
         } catch (err) {
             setError('An error occurred while processing your request.');
@@ -58,10 +51,9 @@ const ChangePassword = ({
         try {
             const isOtpValid = await verifyOtp(otp);
             if (isOtpValid) {
-                await changePassword(newPassword);
-                setStep(1);
                 setPasswordChangedMsg(true);
                 setShowOtpBox(false);
+                setStep(1);
                 setError(null);
             } else {
                 setError('Invalid OTP. Please try again.');
@@ -71,41 +63,18 @@ const ChangePassword = ({
         }
     };
 
-    const handleOkMessage = async () => {
-        setShowMessage(false);
-        await sendOtp();
-        setStep(2);
-        setShowOtpBox(true);
-    };
-
-    const handleCancelMessage = () => {
+    const handleCloseErrorMsg = () => {
         setError(null);
-        setShowMessage(false);
-        setStep(1);
-    };
-
-    const handleExpireMsg = () => {
-        setStep(1);
-        setShowMessage(false);
-        setShowExpiresMsg(false);
     };
 
     const handleOkOfPwdChanged = () => {
         setPasswordChangedMsg(false);
-    }
+    };
+
     return (
         <div className="edit-pwd-container">
             <h2 className="title">Change Password</h2>
-            {showMessage && (
-                <Message
-                    message="Incorrect old password. Are you sure you want to send an OTP to your email?"
-                    buttons={[
-                        { label: 'Ok', onClick: handleOkMessage, className: 'ok-btn' },
-                        { label: 'Cancel', onClick: handleCancelMessage, className: 'close-btn' }
-                    ]}
-                />
-            )}
-
+            {error && <Error error={error} onClose={handleCloseErrorMsg} />}
             {passwordChangedMsg && (
                 <Message
                     message="Password changed successfully!"
@@ -151,15 +120,12 @@ const ChangePassword = ({
                                     placeholder='Confirm New Password here'
                                 />
                             </div>
-                            {/* {error && <p className="error">{error}</p>} */}
                             <button type="submit" className="change-pwd-btn" disabled={loading}>
-                                {/* {loading ? <Loading /> : 'Change Password'}
-                         */}
                                 Change Password
                             </button>
                         </form>
                     )}
-                    {step === 2 && showOtpBox ? (
+                    {step === 2 && showOtpBox && (
                         <OtpVerification
                             otp={otp}
                             setOtp={setOtp}
@@ -167,17 +133,8 @@ const ChangePassword = ({
                             loading={loading}
                             error={error}
                             setShowOtpBox={setShowOtpBox}
-                            setShowExpiresMsg={setShowExpiresMsg}
+                            togetEmailOrNot={togetEmailOrNot}
                         />
-                    ) : (
-                        showExpiresMsg && (
-                            <Message
-                                message="Timer expired! Please request for OTP again."
-                                buttons={[
-                                    { label: 'Ok', onClick: handleExpireMsg, className: 'ok-btn' }
-                                ]}
-                            />
-                        )
                     )}
                 </div>
             )}

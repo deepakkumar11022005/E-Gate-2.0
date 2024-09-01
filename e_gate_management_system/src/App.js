@@ -10,12 +10,12 @@ import ManageBatch from './pages/AdminDbUpload';
 import PageNotFound from './pages/PageNotFound';
 
 const App = () => {
-    const API_URL = "http://localhost:8080";
+    const API_URL = "https://e-gate-20-production.up.railway.app";
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [role, setRole] = useState(null);
     const location = useLocation();
     const navigate = useNavigate();
-    const [email, setEmail] = useState("717822p212@kce.ac.in");
+    const [email, setEmail] = useState("");
     const [token, setToken] = useState(null);
 
     useEffect(() => {
@@ -35,20 +35,49 @@ const App = () => {
         }
     };
 
-    const handleLogout = () => {
-        setIsLoggedIn(false);
-        setRole(null);  
-        setToken(null);
-        navigate('/');
+    const handleLogout = async () => {
+        let logoutUrl = "";
+        if (role === "Entry") {
+            logoutUrl = `/kce/entry/logout?email=${email}`;
+        } else if (role === "admin") {
+            logoutUrl = "/auth/logout";
+        }
+
+        try {
+            const response = await fetch(`${API_URL}${logoutUrl}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const commonResponse = await response.json();
+            if (response.ok) {
+                setIsLoggedIn(false);
+                setRole(null);
+                setToken(null);
+                navigate('/');
+            } else {
+                console.error("Logout failed:", commonResponse.errorMessage);
+                // Handle error display if necessary
+            }
+        } catch (error) {
+            console.error("An error occurred during logout:", error);
+            // Handle error display if necessary
+        }
     };
 
     if (!isLoggedIn) {
-        return <Login
-            onLogin={handleLogin}
-            API_URL={API_URL}
-            token={token}
-            setToken={setToken}
-        />;
+        return (
+            <Login
+                onLogin={handleLogin}
+                API_URL={API_URL}
+                token={token}
+                setToken={setToken}
+                setLoggedEmail={setEmail}
+            />
+        );
     }
 
     return (

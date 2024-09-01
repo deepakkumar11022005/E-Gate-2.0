@@ -107,28 +107,28 @@ const AdminSearchEntry = ({ API_URL, handleLogout, token }) => {
   const handleDownload = async () => {
       setDownloading(true);
       try {
-      //     let filterUrl = new URLSearchParams();
+          // let filterUrl = new URLSearchParams();
     
-      //     if (rollNumber) filterUrl.append('rollNumber', rollNumber);
-      //     if (fromDate) filterUrl.append('fromDate', fromDate);
-      //     if (toDate) filterUrl.append('toDate', toDate);
-      //     if (fromTime) filterUrl.append('fromTime', fromTime);
-      //     if (toTime) filterUrl.append('toTime', toTime);
-      //     if (selectedBatch) filterUrl.append('batch', selectedBatch);
-      //     filterUrl.append('size', pageSize);
-      //     filterUrl.append('page', pageNo);
+          // if (rollNumber) filterUrl.append('rollNumber', rollNumber);
+          // if (fromDate) filterUrl.append('fromDate', fromDate);
+          // if (toDate) filterUrl.append('toDate', toDate);
+          // if (fromTime) filterUrl.append('fromTime', fromTime);
+          // if (toTime) filterUrl.append('toTime', toTime);
+          // if (selectedBatch) filterUrl.append('batch', selectedBatch);
+          // filterUrl.append('size', pageSize);
+          // filterUrl.append('page', pageNo);
     
-      //     const response = await fetch(`${API_URL}/kce/admin/entry?${filterUrl.toString()}`, {
-      //         method: 'POST',
-      //         headers: {
-      //             'Content-Type': 'application/json',
-      //             'Authorization': `Bearer ${token}`,
-      //         },
-      //     });
+          // const response = await fetch(`${API_URL}/kce/admin/entry?${filterUrl.toString()}`, {
+          //     method: 'POST',
+          //     headers: {
+          //         'Content-Type': 'application/json',
+          //         'Authorization': `Bearer ${token}`,
+          //     },
+          // });
     
-      //     const commonResponse = await response.json();
-      //     if (response.ok) {
-      //         const data = commonResponse.data.records || [];
+          // const commonResponse = await response.json();
+          // if (response.ok) {
+          //     const data = commonResponse.data.records || [];
       const data = [
         {
           batch: "2021",
@@ -199,39 +199,27 @@ const AdminSearchEntry = ({ API_URL, handleLogout, token }) => {
                   Status: entry.status,
               }));
   
-              // Create a new workbook and add the custom elements
+               
               const wb = XLSX.utils.book_new();
-              const ws = XLSX.utils.json_to_sheet(processedData, {origin: 6}); // Start table at row 7
-    
-              // Add title, date, and filter details
+              const ws = XLSX.utils.json_to_sheet(processedData, { origin: 6 });
+           
               XLSX.utils.sheet_add_aoa(ws, [
-                  [KCELOGO],  
-                  ['E-Gate Management System'], // Title
-                  [`Date: ${new Date().toLocaleDateString()}`], // Date
-                  ['Batch:', selectedBatch || 'All', 'From Date:', fromDate || 'N/A', 'From Time:', fromTime || 'N/A'], // Filter details
-                  ['', '', 'To Date:', toDate || 'N/A', 'To Time:', toTime || 'N/A'], // Filter details continued
-                  ['Total Entries:', data.length] // Total count
-              ], {origin: 'A1'});
-    
-              // Add the logo
-              // Assuming the logo is in the same directory as the script
-              const img = await fetch('/path/to/logo.png').then(res => res.blob());
-              const reader = new FileReader();
-              reader.onload = () => {
-                  const imgData = reader.result;
-                  XLSX.utils.sheet_add_image(ws, imgData, 'A1'); // Place the image at the top left
-              };
-              reader.readAsArrayBuffer(img);
-    
-              // Set the font to 'Times New Roman' for the entire sheet
-              ws['!cols'] = [{width: 20}, {width: 20}, {width: 30}, {width: 25}, {width: 20}, {width: 15}, {width: 15}, {width: 15}, {width: 15}, {width: 15}];
-              ws['!rows'] = [{ht: 20}, {ht: 25}, {ht: 20}, {ht: 20}, {ht: 20}, {ht: 20}, {ht: 25}];
+                ['E-Gate Management System'],
+                [`Date: ${new Date().toLocaleDateString()}`],
+                ['Batch:', selectedBatch || 'All', 'From Date:', fromDate || 'N/A', 'From Time:', fromTime || 'N/A'],
+                ['', '', 'To Date:', toDate || 'N/A', 'To Time:', toTime || 'N/A'],
+                ['Total Entries:', data.length]
+              ], { origin: 'A1' });
+          
+              ws['!cols'] = [{ width: 20 }, { width: 20 }, { width: 30 }, { width: 25 }, { width: 20 }, { width: 15 }, { width: 15 }, { width: 15 }, { width: 15 }, { width: 15 }];
+              ws['!rows'] = [{ ht: 20 }, { ht: 25 }, { ht: 20 }, { ht: 20 }, { ht: 20 }, { ht: 20 }, { ht: 25 }];
+              
               for (const cell in ws) {
-                  if (ws[cell] && ws[cell].v) {
-                      ws[cell].s = { font: { name: 'Times New Roman' }};
-                  }
+                if (ws[cell] && ws[cell].v) {
+                  ws[cell].s = { font: { name: 'Times New Roman' } };
+                }
               }
-    
+          
               XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
               const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
               const blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });

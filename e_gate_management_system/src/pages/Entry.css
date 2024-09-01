@@ -1,9 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 body {
-	font-family: Arial, sans-serif !important;
-	font-style: normal  !important;
+	font-family: 'Montserrat', sans-serif ;
+    font-stretch: extra-expanded;
+	font-style: normal;
 	margin: 0;
 	padding: 0;
 	background-color: #f4f4f4;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
 }
 
 .inOutAndTimeUpdate {
@@ -35,7 +41,7 @@ body {
 
  
 .container {
-	width: 70% !important;
+	width: 70vw !important;
 	height: 93vh !important;
 	 margin-top: 20px !important;
 	 padding: 0 !important;
@@ -52,6 +58,7 @@ h1 {
 
 #header {
 	text-align: center;
+	/* margin-top: 50px; */
 	margin-bottom: 30px;
 }
 #gateImage {
@@ -186,6 +193,7 @@ h3 {
 	color: black;
 }
 #kce_logo{
+	padding-top: 5vh;
 	width: 60%;
 }
 

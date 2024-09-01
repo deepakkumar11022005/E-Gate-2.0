@@ -13,35 +13,46 @@ const AdminDbUpload = ({ API_URL, handleLogout, token }) => {
   const [loading, setLoading] = useState(false);
   const [fileError, setFileError] = useState(null);  
   const [selectedFileName, setSelectedFileName] = useState(''); 
-
   const postData = async () => {
     setUploading(true);
     try {
-      const response = await fetch(`${API_URL}/kce/admin/batch/add?batch=${uploadedBatchName}&file=${uploadFile}`, {
+      const formData = new FormData();
+      formData.append('batch', uploadedBatchName);
+      formData.append('file', uploadFile);
+  
+      const response = await fetch(`${API_URL}/kce/admin/batch/add`, {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-         } 
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,  
       });
+  
       const data = await response.json();
-      if (data.code===201) {
-        setUploading(false);
+      if (response.ok) {
+        setUploadFile(null);
+        setSelectedFileName(null);
+        return true;
       } else {
-        throw new Error("Error Occurred during upload");
+        setUploadFile(null);
+        setSelectedFileName(null);
+
+        setError(data.errorMessage);
+        return false;
+
       }
     } catch (error) {
       setError(error.message);
-      console.error("Error posting data:", error);
+   
     } finally {
       setUploading(false);
     }
   };
-
+  
   const fetchBatch = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/kce/admin/bacth`, {
+      const response = await fetch(`${API_URL}/kce/admin/batch`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -51,12 +62,14 @@ const AdminDbUpload = ({ API_URL, handleLogout, token }) => {
       const commonResponse = await response.json();
       if (response.ok) {
         setExistingBatch(commonResponse.data.records);
+        console.log(commonResponse.data.records);
       } else {
         throw new Error("Error Occurred while fetching batch details");
       }
     } catch (error) {
       setError(error.message);
-      console.error("Error fetching data:", error);
+      console.log("batch......................................"+error.message);
+
     } finally {
       setLoading(false);
       setUploading(false);

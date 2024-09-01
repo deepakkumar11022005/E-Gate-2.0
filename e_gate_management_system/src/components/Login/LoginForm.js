@@ -66,12 +66,26 @@ const LoginForm = ({ onSubmit, onForgotPassword, email, setEmail, password, setP
                         autoComplete="email"
                         autoFocus
                         value={email}
+                        InputLabelProps={{
+                            sx: {
+                               backgroundColor:'transparent',
+                                padding: '0 5px', 
+                                zIndex:1,
+                            },
+                        }}
                         onChange={handleInputChange(setEmail)}
                     />
                     <TextField
                         variant="outlined"
                         margin="normal"
                         required
+                        InputLabelProps={{
+                            sx: {
+                               
+                                padding: '0 5px', 
+                                zIndex:1,
+                            },
+                        }}
                         fullWidth
                         name="password"
                         label="Password"

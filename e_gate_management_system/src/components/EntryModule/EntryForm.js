@@ -7,17 +7,30 @@ const EntryForm = ({ rollNumber, setRollNumber, makeEntry }) => {
         if (inputRef.current) {
             inputRef.current.focus();
         }
-    }, [rollNumber]); // Focus on the input whenever rollNumber changes
+    }, []);
 
-    function handleChange(e) {
+    const handleChange = (e) => {
         setRollNumber(e.target.value);
-        makeEntry(e.target.value);  
-    }
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent default Enter key action
+            handleMakeEntry(e);
+        }
+    };
+
+    const handleMakeEntry = async (e) => {
+        e.preventDefault(); // Prevent default form submission
+        await makeEntry(rollNumber);
+    };
 
     return (
-        <form id="entryForm" method="get" name="rollNumber" action="entrySubmit">
+        <form id="entryForm" onSubmit={handleMakeEntry}>
             <div className="input-rollno">
-                <label htmlFor="rollNo"><span>Roll Number</span> <span>:</span></label>
+                <label htmlFor="rollNo">
+                    <span>Roll Number</span> <span>:</span>
+                </label>
                 <input
                     type="text"
                     id="rollNo"
@@ -25,11 +38,12 @@ const EntryForm = ({ rollNumber, setRollNumber, makeEntry }) => {
                     required
                     autoFocus
                     onChange={handleChange}
+                    onKeyDown={handleKeyDown} // Handle key down events
                     ref={inputRef}
                 />
             </div>
         </form>
     );
-}
+};
 
 export default EntryForm;

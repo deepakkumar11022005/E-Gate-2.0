@@ -1,6 +1,6 @@
 // pages/Login.js
-import React, { useState,useEffect } from 'react';
-import { useLocation ,Navigate,useNavigate} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useLocation, Navigate, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import LeftSidebar from '../components/Login/LeftSidebar';
 import LoginForm from '../components/Login/LoginForm';
@@ -8,7 +8,7 @@ import OtpVerification from '../components/Admin/OtpVerification';
 import Error from '../components/Admin/Error';
 import Message from '../components/Admin/Message';
 
-const Login = ({ onLogin, API_URL, token, setToken }) => {
+const Login = ({ onLogin, API_URL, token, setToken ,setLoggedEmail}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showOtp, setShowOtp] = useState(false);
@@ -22,42 +22,43 @@ const Login = ({ onLogin, API_URL, token, setToken }) => {
     const [showOtpBox, setShowOtpBox] = useState(false);
     const [showExpiresMsg, setShowExpiresMsg] = useState(false);
     const [uniqueId, setUniqueId] = useState(null);
-    const [role,setRole]=useState("");
-    const [PasswordChangedMsg,setPasswordChangedMsg]=useState(false);
-    const [roleUrl,setRoleUrl]=useState("");
+    const [role, setRole] = useState("");
+    const [PasswordChangedMsg, setPasswordChangedMsg] = useState(false);
+    const [roleUrl, setRoleUrl] = useState("");
     useEffect(() => {
-        
+
         if (location.pathname.includes('/admin')) {
             setRole('admin');
         } else if (location.pathname.includes('/entry')) {
             setRole('Entry');
         }
     }, [location]);
+
     const handleLogin = async () => {
         setLoading(true);
         // e.preventDefault();
         try {
-            
-            if(role==="Entry")  setRoleUrl("/kce/entry/login");
+
+            if (role === "Entry") setRoleUrl("/kce/entry/login");
             else setRoleUrl("/auth/login");
-            
-            const response = await fetch(API_URL+roleUrl, {
+
+            const response = await fetch(`${API_URL}${roleUrl}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: email, password: password })
             });
             const commonResponse = await response.json();
-            if (response.ok && commonResponse.ResponseStatus === 'SUCCESS') {
-                setToken(commonResponse.stringify(commonResponse.data));
+            if (response.ok  ) {
+
+                setLoggedEmail(email);
+                setToken((commonResponse.data));
                 onLogin();
             }
             else {
-                setError(commonResponse.errorMessage)
-                onLogin();
+                setError(commonResponse.errorMessage);
             }
         } catch (Error) {
             setError(Error.message);
-            onLogin();
         }
         finally {
             setLoading(false);
@@ -86,7 +87,7 @@ const Login = ({ onLogin, API_URL, token, setToken }) => {
             }
         }
         catch (Error) {
-            // setError("Something went wrong!,Please try again");
+            setError("Something went wrong!,Please try again");
         }
         finally {
             setLoading(false);
@@ -133,7 +134,7 @@ const Login = ({ onLogin, API_URL, token, setToken }) => {
             });
             const commonResponse = await response.json();
             if (response.ok) {
-
+                
                 return true;
             }
             else {
@@ -162,7 +163,7 @@ const Login = ({ onLogin, API_URL, token, setToken }) => {
                 }
             )
             const commonResponse = await response.json();
-            if(response.ok){
+            if (response.ok) {
                 setPasswordChangedMsg(true); /// to send msg
                 const navigate = navigate();
                 if (role === 'admin') {
@@ -171,18 +172,18 @@ const Login = ({ onLogin, API_URL, token, setToken }) => {
                     navigate('/entry');
                 }
             }
-            else{
+            else {
                 setError("Password not changed. Please try again !");
             }
         }
         catch (error) {
             setError(error.message);
         }
-        finally{
+        finally {
             setLoading(false);
         }
     }
-    const handelPasswordChangedMsg=()=>{
+    const handelPasswordChangedMsg = () => {
         setPasswordChangedMsg(false);
     }
     return (
@@ -230,7 +231,7 @@ const Login = ({ onLogin, API_URL, token, setToken }) => {
                     message={"Password  Successfully changed"}
                     buttons={[
                         { label: 'Ok', onClick: handelPasswordChangedMsg, className: 'ok-btn' }
-                    ]} 
+                    ]}
                 />
             )}
             {error && <Message message={error}
