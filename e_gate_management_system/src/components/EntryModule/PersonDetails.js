@@ -1,15 +1,13 @@
 import React from 'react';
 import scanningImg from '../../images/scanning.gif';
-import Message from '../Admin/Message';
+
+import EntryMessage from './EntryMessage';
 
 const PersonDetails = ({ rollNumber, name, department, batch, inDate, outDate, inTime, outTime, error, handleCloseMsg }) => (
     <div id="details">
         {error && (
-            <Message
+            <EntryMessage
                 message={error}  
-                buttons={[
-                    { label: 'Ok', onClick: handleCloseMsg, className: 'ok-btn' }
-                ]}
             />
         )}
         <div className="person_details">

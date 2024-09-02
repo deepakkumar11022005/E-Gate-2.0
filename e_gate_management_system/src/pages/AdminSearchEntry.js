@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Admin/Header';
 import './AdminSearchEntry.css'; // Add this CSS file for styling
 import Filter from '../components/AdminSearch/Filter';
@@ -12,6 +13,13 @@ import { saveAs } from 'file-saver';
 import KCELOGO from '../images/KCE.png'
 const AdminSearchEntry = ({ API_URL, handleLogout, token }) => {
 
+  
+  const navigate = useNavigate();
+  useEffect(() => {
+      if (!token) {
+          navigate('/');
+      }
+  }, [token, navigate]);
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
   const [fromTime, setFromTime] = useState(null);

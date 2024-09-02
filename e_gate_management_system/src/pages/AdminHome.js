@@ -6,8 +6,16 @@ import Footer from '../components/Admin/Footer';
 import CurrentEntryTable from '../components/AdminHome/CurrentEntryTable';
 import Loading from '../components/Admin/Loading';
 import Error from '../components/Admin/Error';
-
+import { useNavigate } from 'react-router-dom';
 const AdminHome = ({ API_URL, handleLogout, token }) => {
+    
+  console.log("home rendered");
+  // const navigate = useNavigate();
+  // useEffect(() => {
+  //     if (!token) {
+  //         navigate('/');
+  //     }
+  // }, [token, navigate]);
   const [todayEntryInCount, settodayEntryInCount] = useState(0);
   const [studentEntryInCount, setStudentEntryInCount] = useState(0);
   const [staffEntryInCount, setStaffEntryInCount] = useState(0);
@@ -22,6 +30,7 @@ const AdminHome = ({ API_URL, handleLogout, token }) => {
   const [totalEntries, setTotalEntries] = useState(0);
 
   const fetchData = async () => {
+    
     setLoading(true);
     try {
       const response = await fetch(`${API_URL}/kce/admin/today/utils`, {

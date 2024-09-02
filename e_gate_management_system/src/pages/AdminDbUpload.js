@@ -3,8 +3,15 @@ import Header from '../components/Admin/Header';
 import FileUpload from '../components/AdminDbUpload/FileUpload';
 import ExcistingDb from '../components/AdminDbUpload/ExcistingDb';
 import Footer from '../components/Admin/Footer';
-
+import { useNavigate } from 'react-router-dom';
 const AdminDbUpload = ({ API_URL, handleLogout, token }) => {
+    
+  const navigate = useNavigate();
+  useEffect(() => {
+      if (!token) {
+          navigate('/');
+      }
+  }, [token, navigate]);
   const [existingBatch, setExistingBatch] = useState([]);
   const [uploadedBatchName, setUploadedBatchName] = useState("");
   const [uploadFile, setUploadFile] = useState(null);

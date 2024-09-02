@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Entry.css';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/EntryModule/Header';
 import InOutAndTimeUpdate from '../components/EntryModule/InOutAndTimeUpdate';
 import EntryForm from '../components/EntryModule/EntryForm';
@@ -7,20 +8,28 @@ import PersonDetails from '../components/EntryModule/PersonDetails';
 import WelcomeMessage from '../components/EntryModule/WelcomeMessage';
 
 const Entry = ({ API_URL, token }) => {
+   
+    const navigate = useNavigate();
+    useEffect(() => {
+        if (!token) {
+            navigate('/');
+        }
+    }, [token, navigate]);
     const [time, setTime] = useState(new Date().toLocaleString());
     const [inCount, setInCount] = useState(0);
     const [outCount, setOutCount] = useState(0);
+    const [infoRollnumber,setInfoRollNumber]=useState("");
     const [rollNumber, setRollNumber] = useState("");
     const [name, setName] = useState("");
     const [department, setDepartment] = useState("");
     const [batch, setBatch] = useState("");
     const [status, setStatus] = useState(false);
-    const [enteredRollNumber, setEnteredRollNumber] = useState("");
     const [error, setError] = useState("");
     const [outDate, setOutDate] = useState("");
     const [inDate, setInDate] = useState("");
     const [inTime, setInTime] = useState("");
     const [outTime, setOutTime] = useState("");
+    const [entryLoading, setEntryLoading] = useState(false);
 
     const convertTo12HourFormat = (time24) => {
         if (!time24) return null;
@@ -34,6 +43,7 @@ const Entry = ({ API_URL, token }) => {
     };
 
     const makeEntry = async (rollNumber) => {
+        setEntryLoading(true);
         try {
             if (!rollNumber) {
                 setError("Roll number is required.");
@@ -64,7 +74,7 @@ const Entry = ({ API_URL, token }) => {
                         status
                     } = commonResponse.data;
 
-                    setRollNumber(rollNumber);
+                    setInfoRollNumber(rollNumber);
                     setName(name);
                     setDepartment(dept);
                     setBatch(batch);
@@ -73,7 +83,7 @@ const Entry = ({ API_URL, token }) => {
                     setInTime(convertTo12HourFormat(inTime));
                     setOutTime(convertTo12HourFormat(outTime));
                     setStatus(status === "OUT");
-                    setError(""); // Clear any previous errors
+                    setError("");  
                 } else {
                     setError("Unexpected response format.");
                     setStatus(false);
@@ -85,6 +95,8 @@ const Entry = ({ API_URL, token }) => {
         } catch (error) {
             setError(error.message || "An unknown error occurred.");
             setStatus(false);
+        } finally {
+            setEntryLoading(false);
         }
     };
 
@@ -116,30 +128,40 @@ const Entry = ({ API_URL, token }) => {
             setTime(new Date().toLocaleString());
         }, 1000);
 
-        if (enteredRollNumber) {
-            makeEntry(enteredRollNumber);
-        }
-
         fetchInOutCount();
 
         return () => clearInterval(interval);
-    }, [enteredRollNumber]);
+    }, []);
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter' && rollNumber) {
+            makeEntry(rollNumber);
+        }
+    };
 
     const handleCloseMsg = () => {
         setError(null); 
     };
 
+    useEffect(() => {
+        const timer = error && setTimeout(() => {
+            setError(null);
+        }, 2000);
+
+        return () => clearTimeout(timer);
+    }, [error]);
+
     return (
-        <div className="container">
+        <div className="container" onKeyDown={handleKeyDown} tabIndex="0">
             <Header />
             <InOutAndTimeUpdate inCount={inCount} outCount={outCount} time={time} />
             <EntryForm
-                rollNumber={enteredRollNumber}
-                setRollNumber={setEnteredRollNumber}
+                rollNumber={rollNumber}
+                setRollNumber={setRollNumber}
                 makeEntry={makeEntry}
             />
             <PersonDetails
-                rollNumber={rollNumber}
+                rollNumber={infoRollnumber}
                 name={name}
                 batch={batch}
                 department={department}
@@ -150,7 +172,10 @@ const Entry = ({ API_URL, token }) => {
                 error={error}
                 handleCloseMsg={handleCloseMsg}
             />
-            <WelcomeMessage status={status} />
+            <WelcomeMessage 
+                status={status}
+                entryLoading={entryLoading}
+            />
         </div>
     );
 };

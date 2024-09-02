@@ -11,8 +11,9 @@ const Header = ({ handleLogout }) => {
 
   useEffect(() => {
     const header = document.getElementById("header");
+    
     const handleScroll = () => {
-      if (window.scrollY > 50) {
+      if (window.scrollY > 10) {
         header.classList.add("sticky");
       } else {
         header.classList.remove("sticky");
@@ -20,25 +21,30 @@ const Header = ({ handleLogout }) => {
     };
 
     window.addEventListener("scroll", handleScroll);
-
+    
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
-
   const handleOkMessage = async () => {
     setLogoutConfirmation(false);
-    const response = await handleLogout();
-    if (response) {
-      setLogoutError(null);
-    } else {
-      setLogoutError('Error logging out');
+    try {
+      const success = await handleLogout();
+      if (success) {
+        setLogoutError(null);  
+      } else {
+        setLogoutError('Error logging out. Please try again.');  
+      }
+    } catch (error) {
+      setLogoutError('Error logging out. Please try again.');  
     }
   };
+  
 
-  const handleClose=()=>{
+  const handleClose = () => {
     setLogoutError(null);
-  }
+  };
+
   const handleCancelMessage = () => {
     setLogoutConfirmation(false);
   };
@@ -55,13 +61,12 @@ const Header = ({ handleLogout }) => {
         <Link className="nav-item nav-link" to="/admin/home">Home</Link>
         <Link className="nav-item nav-link" to="/admin/search">Search</Link>
         <Link className="nav-item nav-link" to="/admin/manage-batch">Manage Batch</Link>
-        {/* <Link className="nav-item nav-link" to="/admin/visual">Visual</Link> */}
         <Link className="nav-item nav-link" to="/admin/account">Account</Link>
         <button className="nav-item logout" onClick={() => setLogoutConfirmation(true)}>Logout</button>
       </nav>
       {logoutConfirmation && (
         <Message
-          message={"Are you sure to Logout?"}
+          message={"Are you sure you want to logout?"}
           buttons={[
             { label: 'Yes', onClick: handleOkMessage, className: 'ok-btn' },
             { label: 'Cancel', onClick: handleCancelMessage, className: 'close-btn' }

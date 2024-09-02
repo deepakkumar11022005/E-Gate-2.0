@@ -9,20 +9,20 @@ const EntryForm = ({ rollNumber, setRollNumber, makeEntry }) => {
         }
     }, []);
 
-    const handleChange = (e) => {
-        setRollNumber(e.target.value);
-    };
+ 
 
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault(); // Prevent default Enter key action
-            handleMakeEntry(e);
-        }
-    };
+   
 
     const handleMakeEntry = async (e) => {
-        e.preventDefault(); // Prevent default form submission
-        await makeEntry(rollNumber);
+        e.preventDefault();  
+       const response= await makeEntry(rollNumber);
+       if(response ){
+        
+        // alert("Entry made successfully");
+        }
+        else{
+            // alert("Error in making entry");
+            }
     };
 
     return (
@@ -37,8 +37,8 @@ const EntryForm = ({ rollNumber, setRollNumber, makeEntry }) => {
                     name="rollNo"
                     required
                     autoFocus
-                    onChange={handleChange}
-                    onKeyDown={handleKeyDown} // Handle key down events
+                    onChange={(e) => setRollNumber(e.target.value)}
+                    // onKeyDown={handleKeyDown} // Handle key down events
                     ref={inputRef}
                 />
             </div>

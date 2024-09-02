@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Header from '../components/Admin/Header';
 import AdminInfo from '../components/AdminAccount/AdminInfo';
 import PwdAndAdmin from '../components/AdminAccount/PwdAndAdmin';
 import Footer from '../components/Admin/Footer';
-
+import { useNavigate } from 'react-router-dom';
 const AdminAccount = ({ API_URL, email, handleLogout, token }) => {
+    
+  const navigate = useNavigate();
+  useEffect(() => {
+      if (!token) {
+          navigate('/');
+      }
+  }, [token, navigate]);
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');

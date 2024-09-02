@@ -3,7 +3,7 @@ import Loading from './Loading';
 import './OtpVerification.css'; // Updated CSS
 
 const OtpVerification = ({
-  togetEmailOrNot,
+  togetEmailOrNot=true,
   handleSendOtp,
   otp,
   setOtp,
@@ -39,7 +39,7 @@ const OtpVerification = ({
     const response=await handleSendOtp(email);
     if (response) {
       setOtpSent(true);
-      setTimeLeft(10);
+      setTimeLeft(2*60);
     }
   };
 
@@ -89,7 +89,8 @@ const OtpVerification = ({
                   className="send-otp-btn"
                   aria-label="Send OTP"
                 >
-                  Send OTP
+                  {loading ? ("Sending ..."):("Send OTP")}
+                  
                 </button>
               </div>
             </div>
@@ -166,8 +167,6 @@ const OtpVerification = ({
   );
 };
 
-OtpVerification.defaultProps = {
-  togetEmailOrNot: true,
-};
+ 
 
 export default OtpVerification;

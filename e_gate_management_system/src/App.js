@@ -13,35 +13,51 @@ const App = () => {
     const API_URL = "https://e-gate-20-production.up.railway.app";
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [role, setRole] = useState(null);
-    const location = useLocation();
-    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [token, setToken] = useState(null);
+    const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
-        if (location.pathname.includes('/admin')) {
-            setRole('admin');
-        } else if (location.pathname.includes('/entry')) {
-            setRole('Entry');
+        let storedToken, storedRole;
+        
+        // Check if it's admin or entry page and load respective session data
+        if (location.pathname.startsWith('/admin')) {
+            storedToken = localStorage.getItem('adminAuthToken');
+            storedRole = localStorage.getItem('adminRole');
+        } else if (location.pathname.startsWith('/entry')) {
+            storedToken = localStorage.getItem('entryAuthToken');
+            storedRole = localStorage.getItem('entryRole');
+        }
+
+        if (storedToken) {
+            setIsLoggedIn(true);
+            setToken(storedToken);
+            setRole(storedRole);
+        } else {
+            setIsLoggedIn(false);
+            setRole(null);
         }
     }, [location]);
 
-    const handleLogin = () => {
-        setIsLoggedIn(true);
+    const handleLogin = (role, token,email) => {
+        // Store token and role separately based on the role
+        setEmail(email);
         if (role === 'admin') {
-            navigate('/admin/home');
+            localStorage.setItem('adminAuthToken', token);
+            localStorage.setItem('adminRole', role);
         } else if (role === 'Entry') {
-            navigate('/entry');
+            localStorage.setItem('entryAuthToken', token);
+            localStorage.setItem('entryRole', role);
         }
+        setIsLoggedIn(true);
+        setRole(role);
+        setToken(token);
+        navigate(role === 'admin' ? '/admin/home' : '/entry');
     };
 
     const handleLogout = async () => {
-        let logoutUrl = "";
-        if (role === "Entry") {
-            logoutUrl = `/kce/entry/logout?email=${email}`;
-        } else if (role === "admin") {
-            logoutUrl = "/auth/logout";
-        }
+        let logoutUrl = role === "Entry" ? `/kce/entry/logout?email=${email}` : "/auth/logout";
 
         try {
             const response = await fetch(`${API_URL}${logoutUrl}`, {
@@ -57,46 +73,50 @@ const App = () => {
                 setIsLoggedIn(false);
                 setRole(null);
                 setToken(null);
+                if (role === 'admin') {
+                    localStorage.removeItem('adminAuthToken');
+                    localStorage.removeItem('adminRole');
+                } else if (role === 'Entry') {
+                    localStorage.removeItem('entryAuthToken');
+                    localStorage.removeItem('entryRole');
+                }
                 navigate('/');
             } else {
                 console.error("Logout failed:", commonResponse.errorMessage);
-                // Handle error display if necessary
             }
         } catch (error) {
             console.error("An error occurred during logout:", error);
-            // Handle error display if necessary
         }
     };
 
     if (!isLoggedIn) {
-        return (
-            <Login
-                onLogin={handleLogin}
-                API_URL={API_URL}
-                token={token}
-                setToken={setToken}
-                setLoggedEmail={setEmail}
-            />
-        );
+        if (location.pathname.startsWith('/admin')) {
+            return (
+                <Routes>
+                    <Route path="/admin/*" element={<Login onLogin={handleLogin} API_URL={API_URL} role="admin" setToken={setToken} setLoggedEmail={setEmail} setRole={setRole} />} />
+                    <Route path="*" element={<Navigate to="/admin" />} />
+                </Routes>
+            );
+        }
+        if (location.pathname.startsWith('/entry')) {
+            return (
+                <Routes>
+                    <Route path="/entry/*" element={<Login onLogin={handleLogin} API_URL={API_URL} role="Entry" setToken={setToken} setLoggedEmail={setEmail} setRole={setRole} />} />
+                    <Route path="*" element={<Navigate to="/entry" />} />
+                </Routes>
+            );
+        }
+        return <Navigate to="/admin" />;
     }
 
     return (
         <Routes>
-            {/* Route for Admin */}
-            <Route path="/admin">
-                <Route path="home" element={role === 'admin' ? <AdminHome API_URL={API_URL} handleLogout={handleLogout} token={token} /> : <Navigate to="/" />} />
-                <Route path="search" element={role === 'admin' ? <Search API_URL={API_URL} handleLogout={handleLogout} token={token} /> : <Navigate to="/" />} />
-                <Route path="manage-batch" element={role === 'admin' ? <ManageBatch API_URL={API_URL} handleLogout={handleLogout} token={token} /> : <Navigate to="/" />} />
-                <Route path="account" element={role === 'admin' ? <Account API_URL={API_URL} handleLogout={handleLogout} email={email} token={token} /> : <Navigate to="/" />} />
-            </Route>
-
-            {/* Route for Entry */}
-            <Route path="/entry" element={role === 'Entry' ? <Entry API_URL={API_URL} token={token} /> : <Navigate to="/" />} />
-
-            {/* Default Route: Redirect to correct home based on role */}
             <Route path="/" element={<Navigate to={role === 'admin' ? "/admin/home" : role === 'Entry' ? "/entry" : "/"} />} />
-
-            {/* Catch-all Route */}
+            <Route path="/admin/*" element={role === 'admin' ? <AdminHome API_URL={API_URL} handleLogout={handleLogout} token={token} /> : <Navigate to="/admin" />} />
+            <Route path="/admin/search" element={role === 'admin' ? <Search API_URL={API_URL} handleLogout={handleLogout} token={token} /> : <Navigate to="/admin" />} />
+            <Route path="/admin/manage-batch" element={role === 'admin' ? <ManageBatch API_URL={API_URL} handleLogout={handleLogout} token={token} /> : <Navigate to="/admin" />} />
+            <Route path="/admin/account" element={role === 'admin' ? <Account API_URL={API_URL} handleLogout={handleLogout} token={token} email={email}/> : <Navigate to="/admin" />} />
+            <Route path="/entry" element={role === 'Entry' ? <Entry API_URL={API_URL} handleLogout={handleLogout} token={token} /> : <Navigate to="/entry" />} />
             <Route path="*" element={<PageNotFound />} />
         </Routes>
     );
