@@ -18,35 +18,18 @@ const App = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        let storedToken, storedRole;
-        
-        // Check if it's admin or entry page and load respective session data
-        if (location.pathname.startsWith('/admin')) {
-            storedToken = localStorage.getItem('adminAuthToken');
-            storedRole = localStorage.getItem('adminRole');
-        } else if (location.pathname.startsWith('/entry')) {
-            storedToken = localStorage.getItem('entryAuthToken');
-            storedRole = localStorage.getItem('entryRole');
-        }
 
-        if (storedToken) {
-            setIsLoggedIn(true);
-            setToken(storedToken);
-            setRole(storedRole);
-        } else {
-            setIsLoggedIn(false);
-            setRole(null);
-        }
-    }, [location]);
+    const handleLogin = (role, token, email) => {
 
-    const handleLogin = (role, token,email) => {
-        // Store token and role separately based on the role
         setEmail(email);
+        console.log(email + "/////////*************");
+
         if (role === 'admin') {
+            localStorage.setItem("loginEmail", email);
             localStorage.setItem('adminAuthToken', token);
             localStorage.setItem('adminRole', role);
         } else if (role === 'Entry') {
+            localStorage.setItem("loginEmail", email);
             localStorage.setItem('entryAuthToken', token);
             localStorage.setItem('entryRole', role);
         }
@@ -58,6 +41,7 @@ const App = () => {
 
     const handleLogout = async () => {
         let logoutUrl = role === "Entry" ? `/kce/entry/logout?email=${email}` : "/auth/logout";
+        console.log("Attempting to log out:", role, email, token);
 
         try {
             const response = await fetch(`${API_URL}${logoutUrl}`, {
@@ -68,26 +52,57 @@ const App = () => {
                 }
             });
 
-            const commonResponse = await response.json();
             if (response.ok) {
-                setIsLoggedIn(false);
-                setRole(null);
-                setToken(null);
-                if (role === 'admin') {
-                    localStorage.removeItem('adminAuthToken');
-                    localStorage.removeItem('adminRole');
-                } else if (role === 'Entry') {
-                    localStorage.removeItem('entryAuthToken');
-                    localStorage.removeItem('entryRole');
-                }
                 navigate('/');
-            } else {
-                console.error("Logout failed:", commonResponse.errorMessage);
             }
         } catch (error) {
-            console.error("An error occurred during logout:", error);
+
+            alert("Network error during logout:", error);
+
+        }
+        finally {
+            clearSessionData();
+            navigate('/');
         }
     };
+
+    const clearSessionData = () => {
+        setIsLoggedIn(false);
+        setRole(null);
+        setToken(null);
+        if (role === 'admin') {
+            localStorage.removeItem('adminAuthToken');
+            localStorage.removeItem('adminRole');
+        } else if (role === 'Entry') {
+            localStorage.removeItem('entryAuthToken');
+            localStorage.removeItem('entryRole');
+        }
+        localStorage.removeItem("loginEmail");
+    };
+
+
+    useEffect(() => {
+        let storedToken, storedRole;
+
+
+        if (location.pathname.startsWith('/admin')) {
+            storedToken = localStorage.getItem('adminAuthToken');
+            storedRole = localStorage.getItem('adminRole');
+
+        } else if (location.pathname.startsWith('/entry')) {
+            storedToken = localStorage.getItem('entryAuthToken');
+            storedRole = localStorage.getItem('entryRole');
+        }
+        setEmail(localStorage.getItem("loginEmail"));
+        if (storedToken) {
+            setIsLoggedIn(true);
+            setToken(storedToken);
+            setRole(storedRole);
+        } else {
+            setIsLoggedIn(false);
+            setRole(null);
+        }
+    }, [location, handleLogout]);
 
     if (!isLoggedIn) {
         if (location.pathname.startsWith('/admin')) {
@@ -109,13 +124,14 @@ const App = () => {
         return <Navigate to="/admin" />;
     }
 
+
     return (
         <Routes>
-            <Route path="/" element={<Navigate to={role === 'admin' ? "/admin/home" : role === 'Entry' ? "/entry" : "/"} />} />
+            {/* <Route path="/" element={<Navigate to={role === 'admin' ? "/admin" : role === 'Entry' ? "/entry" : "/"} />} /> */}
             <Route path="/admin/*" element={role === 'admin' ? <AdminHome API_URL={API_URL} handleLogout={handleLogout} token={token} /> : <Navigate to="/admin" />} />
             <Route path="/admin/search" element={role === 'admin' ? <Search API_URL={API_URL} handleLogout={handleLogout} token={token} /> : <Navigate to="/admin" />} />
             <Route path="/admin/manage-batch" element={role === 'admin' ? <ManageBatch API_URL={API_URL} handleLogout={handleLogout} token={token} /> : <Navigate to="/admin" />} />
-            <Route path="/admin/account" element={role === 'admin' ? <Account API_URL={API_URL} handleLogout={handleLogout} token={token} email={email}/> : <Navigate to="/admin" />} />
+            <Route path="/admin/account" element={role === 'admin' ? <Account API_URL={API_URL} handleLogout={handleLogout} token={token} email={email} /> : <Navigate to="/admin" />} />
             <Route path="/entry" element={role === 'Entry' ? <Entry API_URL={API_URL} handleLogout={handleLogout} token={token} /> : <Navigate to="/entry" />} />
             <Route path="*" element={<PageNotFound />} />
         </Routes>

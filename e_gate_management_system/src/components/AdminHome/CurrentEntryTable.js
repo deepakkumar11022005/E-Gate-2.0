@@ -1,5 +1,5 @@
 import React from 'react';
-import './CurrentEntryTable.css';   
+import './CurrentEntryTable.css';
 
 const CurrentEntryTable = ({ currentEntries, totalEntries, pageSize, pageNo, onPageChange }) => {
   const totalPages = Math.ceil(totalEntries / pageSize);
@@ -42,14 +42,14 @@ const CurrentEntryTable = ({ currentEntries, totalEntries, pageSize, pageNo, onP
             {currentEntries.map((entry, index) => (
               <tr key={index}>
                 <td>{index + 1 + pageNo * pageSize}</td>
-                <td>{}</td>
+                <td>{entry.batch}</td>
                 <td>{entry.rollNumber}</td>
                 <td>{entry.name}</td>
                 <td>{entry.dept}</td>
-                <td>{entry.inDate}</td>
-                <td>{entry.inTime}</td>
-                <td>{entry.outDate}</td>
-                <td>{entry.outTime}</td>
+                <td>{!entry.inDate ? "---" : entry.inDate}</td>
+                <td>{!entry.inTime ? "---" : entry.inTime}</td>
+                <td>{!entry.outDate ? "---" : entry.outDate}</td>
+                <td>{!entry.outTime ? "---" : entry.outTime}</td>
                 <td>{entry.status}</td>
               </tr>
             ))}

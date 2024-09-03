@@ -47,12 +47,14 @@ const AdminHome = ({ API_URL, handleLogout, token }) => {
       if (response.ok) {
 
         const data = commonResponse.data;
-        setStudentEntryInCount(data.studentEntryInCount || 0);
-        setStudentEntryOutCount(data.studentEntryOutCount || 0);
-        setStaffEntryInCount(data.staffEntryInCount || 0);
-        setStaffEntryOutCount(data.staffEntryOutCount || 0);
-        settodayEntryInCount((data.staffEntryInCount || 0) + (data.studentEntryInCount || 0));
-        settodayEntryOutCount((data.staffEntryOutCount || 0) + (data.studentEntryOutCount || 0));
+        console.log(data);
+        
+        setStudentEntryInCount(data.studentInCount || 0);
+        setStudentEntryOutCount(data.studentOutCount || 0);
+        setStaffEntryInCount(data.staffInCount || 0);
+        setStaffEntryOutCount(data.staffOutCount || 0);
+        settodayEntryInCount((data.staffInCount || 0) + (data.studentInCount || 0));
+        settodayEntryOutCount((data.staffOutCount || 0) + (data.studentOutCount || 0));
       } else {
         throw new Error(commonResponse.errorMessage || "Unexpected error occurred");
       }
@@ -68,7 +70,7 @@ const AdminHome = ({ API_URL, handleLogout, token }) => {
   const fetchCurrentDetails = async (pageNo, pageSize) => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_URL}/kce/admin/today/entry?page=${pageNo}&pageSize=${pageSize}`, {
+      const response = await fetch(`${API_URL}/kce/admin/today/entry?page=${pageNo}&size=${pageSize}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

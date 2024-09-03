@@ -6,8 +6,9 @@ import InOutAndTimeUpdate from '../components/EntryModule/InOutAndTimeUpdate';
 import EntryForm from '../components/EntryModule/EntryForm';
 import PersonDetails from '../components/EntryModule/PersonDetails';
 import WelcomeMessage from '../components/EntryModule/WelcomeMessage';
+import LogoutBar from '../components/EntryModule/LogoutBar';
 
-const Entry = ({ API_URL, token }) => {
+const Entry = ({ API_URL, token ,handleLogout}) => {
    
     const navigate = useNavigate();
     useEffect(() => {
@@ -41,8 +42,8 @@ const Entry = ({ API_URL, token }) => {
 
         return `${hourNum}:${minutes} ${ampm}`;
     };
-
     const makeEntry = async (rollNumber) => {
+        console.log(rollNumber + "/////////////////////////////");
         setEntryLoading(true);
         try {
             if (!rollNumber) {
@@ -83,7 +84,7 @@ const Entry = ({ API_URL, token }) => {
                     setInTime(convertTo12HourFormat(inTime));
                     setOutTime(convertTo12HourFormat(outTime));
                     setStatus(status === "OUT");
-                    setError("");  
+                    setError("");
                 } else {
                     setError("Unexpected response format.");
                     setStatus(false);
@@ -97,10 +98,11 @@ const Entry = ({ API_URL, token }) => {
             setStatus(false);
         } finally {
             setEntryLoading(false);
+            setRollNumber("");
         }
     };
-
     const fetchInOutCount = async () => {
+        console.log("count...............")
         try {
             const response = await fetch(`${API_URL}/kce/entry/today/utils`, {
                 method: 'GET',
@@ -128,16 +130,15 @@ const Entry = ({ API_URL, token }) => {
             setTime(new Date().toLocaleString());
         }, 1000);
 
-        fetchInOutCount();
+      
 
         return () => clearInterval(interval);
     }, []);
+    useEffect(()=>{
+        fetchInOutCount();
+    },[status])
 
-    const handleKeyDown = (event) => {
-        if (event.key === 'Enter' && rollNumber) {
-            makeEntry(rollNumber);
-        }
-    };
+
 
     const handleCloseMsg = () => {
         setError(null); 
@@ -152,7 +153,7 @@ const Entry = ({ API_URL, token }) => {
     }, [error]);
 
     return (
-        <div className="container" onKeyDown={handleKeyDown} tabIndex="0">
+        <div className="container"  tabIndex="0">
             <Header />
             <InOutAndTimeUpdate inCount={inCount} outCount={outCount} time={time} />
             <EntryForm
@@ -176,6 +177,7 @@ const Entry = ({ API_URL, token }) => {
                 status={status}
                 entryLoading={entryLoading}
             />
+              <LogoutBar handleLogout={handleLogout} /> 
         </div>
     );
 };

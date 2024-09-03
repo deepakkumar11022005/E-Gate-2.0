@@ -1,6 +1,7 @@
 import React from 'react';
 import './Filter.css';
 import Loading from '../Admin/Loading';
+
 const Filter = ({
   fromDate,
   toDate,
@@ -13,17 +14,16 @@ const Filter = ({
   setFromTime,
   setToTime,
   setRollNumber,
-  setBatch,
   handleSearch,
-  batchLoading
+  batchLoading,
+  selectedBatch,
+  setSelectedBatch
 }) => {
 
-   
   const handleInputChange = (e, setter) => {
     setter(e.target.value);
   };
 
- 
   const onSubmit = (e) => {
     e.preventDefault();
     handleSearch();
@@ -34,7 +34,6 @@ const Filter = ({
       <h2>Filter Records</h2>
       <form className="filter-form" onSubmit={onSubmit}>
         <div className="form-row">
-          {/* From Date */}
           <div className="form-group">
             <label htmlFor="fromDate">From Date:</label>
             <input
@@ -46,7 +45,6 @@ const Filter = ({
             />
           </div>
 
-          {/* To Date */}
           <div className="form-group">
             <label htmlFor="toDate">To Date:</label>
             <input
@@ -60,7 +58,6 @@ const Filter = ({
         </div>
 
         <div className="form-row">
-          {/* From Time */}
           <div className="form-group">
             <label htmlFor="fromTime">From Time:</label>
             <input
@@ -72,7 +69,6 @@ const Filter = ({
             />
           </div>
 
-          {/* To Time */}
           <div className="form-group">
             <label htmlFor="toTime">To Time:</label>
             <input
@@ -86,7 +82,6 @@ const Filter = ({
         </div>
 
         <div className="form-row">
-          {/* Roll Number */}
           <div className="form-group">
             <label htmlFor="rollNumber">Roll Number:</label>
             <input
@@ -99,32 +94,31 @@ const Filter = ({
             />
           </div>
 
-          {/* Batch */}
           <div className="form-group">
             <label htmlFor="batch">Batch:</label>
             <select
               id="batch"
               name="batch"
-              value={batch}
-              onChange={(e) => handleInputChange(e, setBatch)}
+              value={selectedBatch}
+              onChange={(e) => handleInputChange(e, setSelectedBatch)}
             >
-              
-              
               <option value="">Select Batch</option>
-              {batchLoading ? (<Loading/>):(
-                batch.map(( obj)=>{
-                  <option value="batch1">(obj.batchName)</option>
-                })
-              
-              
-            )};
-              {/* Add more batches as needed */}
+              {batchLoading ? (
+                <option disabled>Loading...</option>
+              ) : (
+                batch.map((obj) => (
+                  <option key={obj.batchName} value={obj.batchName}>
+                    {obj.batchName}
+                  </option>
+                ))
+              )}
             </select>
           </div>
         </div>
+
         <br />
         <div className="form-row">
-          <button type="submit" className="filter-submit" onClick={onSubmit}>Search</button>
+          <button type="submit" className="filter-submit">Search</button>
         </div>
       </form>
     </div>

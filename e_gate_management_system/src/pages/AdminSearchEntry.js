@@ -50,22 +50,25 @@ const AdminSearchEntry = ({ API_URL, handleLogout, token }) => {
       if (fromTime) filterUrl.append('fromTime', fromTime);
       if (toTime) filterUrl.append('toTime', toTime);
       if (selectedBatch) filterUrl.append('batch', selectedBatch);
-      filterUrl.append("size", pageSize);
       filterUrl.append("page", pageNo);
+      filterUrl.append("size", pageSize);
+      
 
        
+      // console.log(`${API_URL}/kce/admin/entry?${filterUrl.toString()}`);
       const response = await fetch(`${API_URL}/kce/admin/entry?${filterUrl.toString()}`, {
-        method: 'POST',
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         }
       });
+      
       const commonResponse = await response.json();
       if (response.ok) {
+        console.log(commonResponse.data.records);
         setTableEntries(commonResponse.data.records);
         setFilterCount(commonResponse.data.totalCount);
-
       } else {
         throw new Error("Data not received");
       }
@@ -73,6 +76,12 @@ const AdminSearchEntry = ({ API_URL, handleLogout, token }) => {
       setError(error.message);
       console.error("Error fetching data:", error);
     } finally {
+      setRollNumber(null);
+      setFromDate(null);
+      setFromTime(null);
+      setToDate(null);
+      setToTime(null);
+      setSelectedBatch(null);
       setLoading(false);
     }
   };
@@ -90,6 +99,7 @@ const AdminSearchEntry = ({ API_URL, handleLogout, token }) => {
       });
       const commonResponse = await response.json();
       if (response.ok) {
+        console.log(commonResponse.data.records);
         setBatch(commonResponse.data.records);
       } else {
         throw new Error("Data not received");
@@ -115,85 +125,28 @@ const AdminSearchEntry = ({ API_URL, handleLogout, token }) => {
   const handleDownload = async () => {
       setDownloading(true);
       try {
-          // let filterUrl = new URLSearchParams();
+          let filterUrl = new URLSearchParams();
     
-          // if (rollNumber) filterUrl.append('rollNumber', rollNumber);
-          // if (fromDate) filterUrl.append('fromDate', fromDate);
-          // if (toDate) filterUrl.append('toDate', toDate);
-          // if (fromTime) filterUrl.append('fromTime', fromTime);
-          // if (toTime) filterUrl.append('toTime', toTime);
-          // if (selectedBatch) filterUrl.append('batch', selectedBatch);
-          // filterUrl.append('size', pageSize);
-          // filterUrl.append('page', pageNo);
+          if (rollNumber) filterUrl.append('rollNumber', rollNumber);
+          if (fromDate) filterUrl.append('fromDate', fromDate);
+          if (toDate) filterUrl.append('toDate', toDate);
+          if (fromTime) filterUrl.append('fromTime', fromTime);
+          if (toTime) filterUrl.append('toTime', toTime);
+          if (selectedBatch) filterUrl.append('batch', selectedBatch);
+          filterUrl.append('size', pageSize);
+          filterUrl.append('page', pageNo);
     
-          // const response = await fetch(`${API_URL}/kce/admin/entry?${filterUrl.toString()}`, {
-          //     method: 'POST',
-          //     headers: {
-          //         'Content-Type': 'application/json',
-          //         'Authorization': `Bearer ${token}`,
-          //     },
-          // });
+          const response = await fetch(`${API_URL}/kce/admin/entry?${filterUrl.toString()}`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`,
+              },
+          });
     
-          // const commonResponse = await response.json();
-          // if (response.ok) {
-          //     const data = commonResponse.data.records || [];
-      const data = [
-        {
-          batch: "2021",
-          rollNumber: "21CS001",
-          name: "John Doe",
-          dept: "Computer Science",
-          inDate: "2024-08-24",
-          inTime: "09:00 AM",
-          outDate: "2024-08-24",
-          outTime: "05:00 PM",
-          status: "Present"
-        },
-        {
-          batch: "2021",
-          rollNumber: "21CS002",
-          name: "Jane Smith",
-          dept: "Computer Science",
-          inDate: "2024-08-24",
-          inTime: "09:15 AM",
-          outDate: "2024-08-24",
-          outTime: "04:45 PM",
-          status: "Present"
-        },
-        {
-          batch: "2020",
-          rollNumber: "20EE003",
-          name: "Alice Johnson",
-          dept: "Electrical Engineering",
-          inDate: "2024-08-24",
-          inTime: "08:45 AM",
-          outDate: "2024-08-24",
-          outTime: "05:15 PM",
-          status: "Present"
-        },
-        {
-          batch: "2019",
-          rollNumber: "19ME004",
-          name: "Bob Brown",
-          dept: "Mechanical Engineering",
-          inDate: "2024-08-24",
-          inTime: "09:05 AM",
-          outDate: "2024-08-24",
-          outTime: "04:55 PM",
-          status: "Present"
-        },
-        {
-          batch: "2022",
-          rollNumber: "22CE005",
-          name: "Charlie Green",
-          dept: "Civil Engineering",
-          inDate: "2024-08-24",
-          inTime: "09:10 AM",
-          outDate: "2024-08-24",
-          outTime: "05:10 PM",
-          status: "Present"
-        }
-      ];
+          const commonResponse = await response.json();
+          if (response.ok) {
+              const data = commonResponse.data.records || [];
       
               const processedData = data.map(entry => ({
                   Batch: entry.batch,
@@ -232,9 +185,9 @@ const AdminSearchEntry = ({ API_URL, handleLogout, token }) => {
               const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
               const blob = new Blob([wbout], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
               saveAs(blob, `E_Gate_EntryDetails_${new Date().toISOString().split('T')[0]}.xlsx`);
-          // } else {
-          //     throw new Error('Data not received');
-          // }
+          } else {
+              throw new Error('Data not received');
+          }
       } catch (error) {
           setError(error.message);
       } finally {
@@ -257,6 +210,8 @@ const AdminSearchEntry = ({ API_URL, handleLogout, token }) => {
         fromTime={fromTime}
         toTime={toTime}
         batch={batch}
+        selectedBatch={selectedBatch}
+        setSelectedBatch={setSelectedBatch}
         rollNumber={rollNumber}
         setFromDate={setFromDate}
         setToDate={setToDate}

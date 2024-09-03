@@ -118,7 +118,7 @@ h1 {
 }
 
 #details {
-	width: 96%;
+	width: 97.28%;
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: 20px;
@@ -145,7 +145,7 @@ h3 {
 }
  
 .person_details {
-	width: 65%;
+	width: 66%;
 	padding: 0;
 	margin-top: -20px;
 
@@ -173,7 +173,7 @@ h3 {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	margin-top: 5px;
+	margin-top: 0px;
 	font-size: 24px;
 	font-weight: bold;
 	color: white;
@@ -266,7 +266,7 @@ h3 {
     display: flex; 
     justify-content: center;
     align-items: center;
-    margin-top: 5px;
+    /* margin-top: 1px; */
     font-size: 24px;
     font-weight: bold;
     color: black;
@@ -280,7 +280,7 @@ h3 {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 5px;
+    /* margin-top: 1px; */
     font-size: 24px;
     font-weight: bold;
     color: white;

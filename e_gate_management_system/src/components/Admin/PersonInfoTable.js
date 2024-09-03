@@ -44,14 +44,14 @@ const PersonInfoTable = ({currentEntries, totalEntries, pageSize, pageNo, onPage
               {currentEntries.map((entry, index) => (
                 <tr key={index}>
                   <td>{index + 1 + pageNo * pageSize}</td>
-                  <td>{}</td>
+                  <td>{entry.batch}</td>
                   <td>{entry.rollNumber}</td>
                   <td>{entry.name}</td>
                   <td>{entry.dept}</td>
-                  <td>{entry.inDate}</td>
-                  <td>{entry.inTime}</td>
-                  <td>{entry.outDate}</td>
-                  <td>{entry.outTime}</td>
+                  <td>{entry.inDate || " --- " }</td>
+                  <td>{entry.inTime || " --- "}</td>
+                  <td>{entry.outDate || " --- "}</td>
+                  <td>{entry.outTime || " --- "}</td>
                   <td>{entry.status}</td>
                 </tr>
               ))}
