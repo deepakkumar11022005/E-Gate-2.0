@@ -8,7 +8,7 @@ import PersonDetails from '../components/EntryModule/PersonDetails';
 import WelcomeMessage from '../components/EntryModule/WelcomeMessage';
 import LogoutBar from '../components/EntryModule/LogoutBar';
 
-const Entry = ({ API_URL, token ,handleLogout}) => {
+const Entry = ({ API_URL, token ,handleLogout,logoutLoading}) => {
    
     const navigate = useNavigate();
     useEffect(() => {
@@ -177,7 +177,7 @@ const Entry = ({ API_URL, token ,handleLogout}) => {
                 status={status}
                 entryLoading={entryLoading}
             />
-              <LogoutBar handleLogout={handleLogout} /> 
+              <LogoutBar handleLogout={handleLogout} logoutLoading={logoutLoading} /> 
         </div>
     );
 };

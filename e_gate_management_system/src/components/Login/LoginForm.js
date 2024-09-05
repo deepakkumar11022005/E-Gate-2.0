@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button, TextField, Grid, Link, Typography } from '@mui/material';
 import GoogleIconSVG from './GoogleIconSVG';
 
-const LoginForm = ({ onSubmit, onForgotPassword, email, setEmail, password, setPassword, loading }) => {
+const LoginForm = ({ onSubmit, onForgotPassword,AuthLogin, email, setEmail, password, setPassword, loading }) => {
     const [isButtonDisabled, setIsButtonDisabled] = useState(false);
     const [showWarning, setShowWarning] = useState(false);
 
@@ -12,6 +12,9 @@ const LoginForm = ({ onSubmit, onForgotPassword, email, setEmail, password, setP
         setShowWarning(false);
     };
 
+    const handelAuthLogin= async()=>{
+          await AuthLogin();
+    }
     const handleSignIn = (e) => {
         e.preventDefault();
         if (!email || !password) {
@@ -158,6 +161,7 @@ const LoginForm = ({ onSubmit, onForgotPassword, email, setEmail, password, setP
                     fullWidth
                     variant="outlined"
                     startIcon={<GoogleIconSVG />}
+                    onClick={handelAuthLogin}
                     sx={{
                         mt: 2,
                         borderColor: '#4285F4',

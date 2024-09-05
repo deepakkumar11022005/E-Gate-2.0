@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import Loading from '../Admin/Loading';
-import Error from '../Admin/Error.js';
 import Message from '../Admin/Message';
 import './ChangePassword.css';  // Ensure this path is correct
-import OtpVerification from '../Admin/OtpVerification.js';
-
+ 
+import OtpVerification from '../Admin/OtpVerification';
 const ChangePassword = ({
     verifyAndChangePassword,
     setOldPassword,
@@ -22,24 +21,24 @@ const ChangePassword = ({
     setOtp,
     setError
 }) => {
+    const [showMessage, setShowMessage] = useState(false);
     const [step, setStep] = useState(1);
     const [showOtpBox, setShowOtpBox] = useState(false);
-    const [togetEmailOrNot, setTogetEmailOrNot] = useState(false);
     const [passwordChangedMsg, setPasswordChangedMsg] = useState(false);
-
+      const [togetEmailOrNot,setTogetEmailOrNot]=useState(false)
+    // Handle password submission logic
     const handlePasswordSubmit = async () => {
-        if (newPassword !== confirmPassword) {
-            setError('New password and confirm password do not match.');
-            return;
-        }
-
         try {
+            if (newPassword !== confirmPassword) {
+                setError('New password and confirm password do not match.');
+                return;
+            }
             const isValid = await verifyAndChangePassword(oldPassword, newPassword);
             if (!isValid) {
-                await sendOtp();
-                setStep(2);
-                setShowOtpBox(true);
+                // Show message if the old password is incorrect
+                setShowMessage(true);
             } else {
+                // If password change is successful
                 setPasswordChangedMsg(true);
             }
         } catch (err) {
@@ -47,6 +46,7 @@ const ChangePassword = ({
         }
     };
 
+   
     const handleOtpSubmit = async () => {
         try {
             const isOtpValid = await verifyOtp(otp);
@@ -63,10 +63,24 @@ const ChangePassword = ({
         }
     };
 
-    const handleCloseErrorMsg = () => {
-        setError(null);
+    // Handle "Ok" action when password is incorrect
+    const handleOkMessage = async () => {
+        setShowMessage(false);
+        await sendOtp();  // Send OTP to email
+        setStep(2);  // Move to OTP step
+        setShowOtpBox(true);  // Show OTP box
     };
 
+    // Handle "Cancel" action
+    const handleCancelMessage = () => {
+        setError(null);
+        setShowMessage(false);
+        setStep(1);   
+        setShowOtpBox(false);
+    };
+    
+
+    // Handle password changed success message
     const handleOkOfPwdChanged = () => {
         setPasswordChangedMsg(false);
     };
@@ -74,7 +88,19 @@ const ChangePassword = ({
     return (
         <div className="edit-pwd-container">
             <h2 className="title">Change Password</h2>
-            {error && <Error error={error} onClose={handleCloseErrorMsg} />}
+
+            {/* Show message when password is incorrect */}
+            {showMessage && (
+                <Message
+                    message="Incorrect old password. Are you sure you want to send an OTP to your email?"
+                    buttons={[
+                        { label: 'Ok', onClick: handleOkMessage, className: 'ok-btn' },
+                        { label: 'Cancel', onClick: handleCancelMessage, className: 'close-btn' }
+                    ]}
+                />
+            )}
+
+            {/* Show message when password is changed successfully */}
             {passwordChangedMsg && (
                 <Message
                     message="Password changed successfully!"
@@ -83,8 +109,10 @@ const ChangePassword = ({
                     ]}
                 />
             )}
+
             {loading ? <Loading /> : (
-                <div className="">
+                <div>
+                     
                     {step === 1 && (
                         <form onSubmit={(e) => { e.preventDefault(); handlePasswordSubmit(); }}>
                             <div className="form-group">
@@ -125,7 +153,11 @@ const ChangePassword = ({
                             </button>
                         </form>
                     )}
+
+              
                     {step === 2 && showOtpBox && (
+                        <>
+                         
                         <OtpVerification
                             otp={otp}
                             setOtp={setOtp}
@@ -134,7 +166,10 @@ const ChangePassword = ({
                             error={error}
                             setShowOtpBox={setShowOtpBox}
                             togetEmailOrNot={togetEmailOrNot}
-                        />
+                            handleCloseModal={handleCancelMessage}
+                        /> 
+                        
+                        </>
                     )}
                 </div>
             )}

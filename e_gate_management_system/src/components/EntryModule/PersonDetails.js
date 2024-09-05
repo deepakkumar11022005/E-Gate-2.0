@@ -23,11 +23,11 @@ const PersonDetails = ({ rollNumber, name, department, batch, inDate, outDate, i
                 </div>
                 <div className="person_info_answer_from_db">
                     <div className="person_ans_span">{rollNumber}</div>
-                    <div className="person_ans_span">{name}</div>
-                    <div className="person_ans_span">{department}</div>
-                    <div className="person_ans_span">{batch}</div>
-                    <div className="person_ans_span">{inDate + " " + inTime}</div>
-                    <div className="person_ans_span">{outDate + " " + outTime}</div>
+                    <div className="person_ans_span">{name || " ---"}</div>
+                    <div className="person_ans_span">{department || " ---"}</div>
+                    <div className="person_ans_span">{batch|| " ---"}</div>
+                    <div className="person_ans_span">{(inDate || " ---") + " " +(inTime || " ---") }</div>
+                    <div className="person_ans_span">{(outDate || " ---")+ " " + (outTime || " ---")}</div>
                 </div>
             </div>
         </div>

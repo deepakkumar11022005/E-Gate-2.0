@@ -76,6 +76,7 @@ const LeftSidebar = () => (
                 color: 'black',
                 fontSize: { xs: 16, md: 18 },
                 textAlign: { xs: 'center', md: 'left' },
+                paddingLeft:"40px",
                 marginX: { xs: 2, md: 2 },
                 marginBottom: -10, // Adding marginBottom to push the text 100px down
                 position: 'relative',

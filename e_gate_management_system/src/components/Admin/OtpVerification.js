@@ -12,7 +12,8 @@ const OtpVerification = ({
   error,
   setShowOtpBox,
   setShowExpiresMsg,
-  handleChangePassword
+  handleChangePassword,
+  handleCloseModal
 }) => {
   const [timeLeft, setTimeLeft] = useState(5*60);  
   const [email, setEmail] = useState('');  
@@ -39,7 +40,7 @@ const OtpVerification = ({
     const response=await handleSendOtp(email);
     if (response) {
       setOtpSent(true);
-      setTimeLeft(2*60);
+      setTimeLeft(5*60);
     }
   };
 
@@ -58,12 +59,18 @@ const OtpVerification = ({
       return;
     }
 
-     await handleChangePassword(email, newPassword);
+    await handleChangePassword(email, newPassword);
   };
+ 
 
   return (
     <div className="otp-modal-overlay">
       <div className="otp-modal">
+         
+        <button className="close-btn" onClick={handleCloseModal} aria-label="Close">
+          &times;
+        </button>
+        
         <h2 className="otp-title">OTP Verification</h2>
 
         {!otpSent && togetEmailOrNot ? (
@@ -90,7 +97,6 @@ const OtpVerification = ({
                   aria-label="Send OTP"
                 >
                   {loading ? ("Sending ..."):("Send OTP")}
-                  
                 </button>
               </div>
             </div>
@@ -166,7 +172,5 @@ const OtpVerification = ({
     </div>
   );
 };
-
- 
 
 export default OtpVerification;

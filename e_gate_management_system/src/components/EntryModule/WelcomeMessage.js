@@ -6,7 +6,7 @@ const WelcomeMessage = ({ status, entryLoading }) => (
         {entryLoading ? (
             <EntryLoading />
         ) : (
-            status ? "Welcome to KCE" : "Thank you, visit again"
+            status ? "Welcome to KCE" : "Thank you, visit again !"
         )}
     </div>
 );

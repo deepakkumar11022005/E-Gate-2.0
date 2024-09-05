@@ -17,7 +17,7 @@ const App = () => {
     const [token, setToken] = useState(null);
     const location = useLocation();
     const navigate = useNavigate();
-
+    const [logoutLoading,setLogoutLoading]=useState(false);
 
     const handleLogin = (role, token, email) => {
 
@@ -40,7 +40,8 @@ const App = () => {
     };
 
     const handleLogout = async () => {
-        let logoutUrl = role === "Entry" ? `/kce/entry/logout?email=${email}` : "/auth/logout";
+        setLogoutLoading(true);
+        let logoutUrl = role === "Entry" ? `/kce/entry/logout` : "/auth/logout";
         console.log("Attempting to log out:", role, email, token);
 
         try {
@@ -53,7 +54,7 @@ const App = () => {
             });
 
             if (response.ok) {
-                navigate('/');
+                // navigate('/');
             }
         } catch (error) {
 
@@ -62,7 +63,8 @@ const App = () => {
         }
         finally {
             clearSessionData();
-            navigate('/');
+            // navigate('/');
+            setLogoutLoading(false);
         }
     };
 
@@ -80,6 +82,7 @@ const App = () => {
         localStorage.removeItem("loginEmail");
     };
 
+  
 
     useEffect(() => {
         let storedToken, storedRole;
@@ -121,7 +124,7 @@ const App = () => {
                 </Routes>
             );
         }
-        return <Navigate to="/admin" />;
+        return <Navigate to="/entry" />;
     }
 
 
@@ -132,7 +135,7 @@ const App = () => {
             <Route path="/admin/search" element={role === 'admin' ? <Search API_URL={API_URL} handleLogout={handleLogout} token={token} /> : <Navigate to="/admin" />} />
             <Route path="/admin/manage-batch" element={role === 'admin' ? <ManageBatch API_URL={API_URL} handleLogout={handleLogout} token={token} /> : <Navigate to="/admin" />} />
             <Route path="/admin/account" element={role === 'admin' ? <Account API_URL={API_URL} handleLogout={handleLogout} token={token} email={email} /> : <Navigate to="/admin" />} />
-            <Route path="/entry" element={role === 'Entry' ? <Entry API_URL={API_URL} handleLogout={handleLogout} token={token} /> : <Navigate to="/entry" />} />
+            <Route path="/entry" element={role === 'Entry' ? <Entry API_URL={API_URL} handleLogout={handleLogout} token={token} logoutLoading={logoutLoading}/> : <Navigate to="/entry" />} />
             <Route path="*" element={<PageNotFound />} />
         </Routes>
     );

@@ -22,6 +22,10 @@ const Login = ({ onLogin, API_URL, setLoggedEmail }) => {
     const location = useLocation();
     const navigate = useNavigate();
 
+    const handleCancelMessage = () => {
+        setError(null);
+        setShowOtpBox(false);
+    };
     useEffect(() => {
         if (location.pathname.includes('/admin')) {
             setRole('admin');
@@ -31,6 +35,37 @@ const Login = ({ onLogin, API_URL, setLoggedEmail }) => {
         setRoleUrl(role === "Entry" ? "/kce/entry/login" : "/auth/login");
     }, [location, role]);
 
+    const AuthLogin = async () => {
+        setLoading(true);
+        setError('');
+    
+        try {
+            console.log('Initiating login request');
+    
+            const response = await fetch(`${API_URL}/oauth2/authorization/google`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            if (response.redirected) {
+                window.location.href = response.url;  
+                return;
+            }
+            const commonResponse = await response.json();
+            if (response.ok) {
+                setLoggedEmail(email); 
+                console.log(commonResponse); 
+                onLogin(role, commonResponse.data, email);   
+            } else {
+                setError(commonResponse.errorMessage || 'Something went wrong');
+            }
+        } catch (error) {
+            console.error(error);
+            setError(error.message || 'Network error occurred');
+        } finally {
+            setLoading(false);
+        }
+    };
+    
     const handleLogin = async () => {
         setLoading(true);
         setError('');
@@ -85,6 +120,7 @@ const Login = ({ onLogin, API_URL, setLoggedEmail }) => {
         } finally {
             setLoadingOtp(false);
         }
+        
     }
 
     const handleVerifyOtp = async (email, otp) => {
@@ -149,11 +185,11 @@ const Login = ({ onLogin, API_URL, setLoggedEmail }) => {
     const handleExpireMsg = () => {
         setShowExpiresMsg(false);
     };
-
+    
     return (
         <div style={{ display: 'flex', height: '100vh' }}>
             <Helmet>
-                <title>Login | E-Gate Management System</title>
+                <title> E-Gate Management System</title>
             </Helmet>
 
             <LeftSidebar />
@@ -166,6 +202,7 @@ const Login = ({ onLogin, API_URL, setLoggedEmail }) => {
                 password={password}
                 setPassword={setPassword}
                 loading={loading}
+                AuthLogin={AuthLogin}
               
             />
 
@@ -188,6 +225,7 @@ const Login = ({ onLogin, API_URL, setLoggedEmail }) => {
                     setShowOtpBox={setShowOtpBox}
                     handleSendOtp={handleSendOtp}
                     handleChangePassword={handleChangePassword}
+                    handleCloseModal={handleCancelMessage}
                 />
             )}
 

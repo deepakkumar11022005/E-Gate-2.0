@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FiLogOut } from 'react-icons/fi';  
 import './logoutBar.css';   
 
-const LogoutBar = ({ handleLogout }) => {
+const LogoutBar = ({ handleLogout,logoutLoading }) => {
     const [expanded, setExpanded] = useState(false);
 
     const toggleBar = () => {
@@ -24,7 +24,8 @@ const LogoutBar = ({ handleLogout }) => {
             </div>
             {expanded && (
                 <button className="logout-button" onClick={onLogout}>
-                    Logout
+                    { logoutLoading ?("Clearing..."):("Logout")}
+                    
                 </button>
             )}
         </div>
