@@ -35,32 +35,20 @@ const Login = ({ onLogin, API_URL, setLoggedEmail }) => {
         setRoleUrl(role === "Entry" ? "/kce/entry/login" : "/auth/login");
     }, [location, role]);
 
+   
+
     const AuthLogin = async () => {
         setLoading(true);
         setError('');
-    
+        
         try {
-            console.log('Initiating login request');
-    
-            const response = await fetch(`${API_URL}/oauth2/authorization/google`, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
-            });
-            if (response.redirected) {
-                window.location.href = response.url;  
-                return;
-            }
-            const commonResponse = await response.json();
-            if (response.ok) {
-                setLoggedEmail(email); 
-                console.log(commonResponse); 
-                onLogin(role, commonResponse.data, email);   
-            } else {
-                setError(commonResponse.errorMessage || 'Something went wrong');
-            }
+            console.log('Initiating OAuth2 login request');
+            window.location.href = `${API_URL}/oauth2/authorization/google`;
+            
+            
         } catch (error) {
             console.error(error);
-            setError(error.message || 'Network error occurred');
+            setError('Error initiating OAuth2 login');
         } finally {
             setLoading(false);
         }

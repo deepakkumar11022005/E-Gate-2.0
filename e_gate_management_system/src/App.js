@@ -8,7 +8,8 @@ import Search from './pages/AdminSearchEntry';
 import Account from './pages/AdminAccount';
 import ManageBatch from './pages/AdminDbUpload';
 import PageNotFound from './pages/PageNotFound';
-
+import kceLogo from './images/kce.gif';
+import OAuth2 from './components/Login/OAuth2'
 const App = () => {
     const API_URL = "https://e-gate-20-production.up.railway.app";
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -107,25 +108,97 @@ const App = () => {
         }
     }, [location, handleLogout]);
 
+    useEffect(() => {
+        let storedToken, storedRole;
+    
+        if (location.pathname.startsWith('/admin')) {
+            storedToken = localStorage.getItem('adminAuthToken');
+            storedRole = localStorage.getItem('adminRole');
+        } else if (location.pathname.startsWith('/entry')) {
+            storedToken = localStorage.getItem('entryAuthToken');
+            storedRole = localStorage.getItem('entryRole');
+        }
+        setEmail(localStorage.getItem("loginEmail"));
+        if (storedToken) {
+            setIsLoggedIn(true);
+            setToken(storedToken);
+            setRole(storedRole);
+        } else {
+            setIsLoggedIn(false);
+            setRole(null);
+        }
+     
+        const handleTabClose = (e) => {
+            
+            if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
+                console.log('Page reload detected, no session clearing');
+                return;  
+            }
+    
+            clearSessionData();  
+        };
+    
+        window.addEventListener('beforeunload', handleTabClose);
+     
+        return () => {
+            window.removeEventListener('beforeunload', handleTabClose);
+        };
+    }, [location]);
+    
+    useEffect(() => {
+        const setFavicon = (url) => {
+            const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+            link.type = 'image/x-icon';
+            link.rel = 'shortcut icon';
+            link.href = url;
+            document.getElementsByTagName('head')[0].appendChild(link);
+        };
+
+        setFavicon(kceLogo); 
+        switch (location.pathname) {
+            case '/admin/home':
+                document.title = 'Admin Home - E-Gate Management System';
+                break;
+            case '/admin/search':
+                document.title = 'Search - E-Gate Management System';
+                break;
+            case '/admin/manage-batch':
+                document.title = 'Manage Batch - E-Gate Management System';
+                break;
+            case '/admin/account':
+                document.title = 'Account - E-Gate Management System';
+                break;
+            case '/entry':
+                document.title = 'Entry - E-Gate Management System';
+                break;
+            default:
+                document.title = 'E-Gate Management System';
+                break;
+        }
+    }, [location]);
     if (!isLoggedIn) {
         if (location.pathname.startsWith('/admin')) {
-            return (
-                <Routes>
-                    <Route path="/admin/*" element={<Login onLogin={handleLogin} API_URL={API_URL} role="admin" setToken={setToken} setLoggedEmail={setEmail} setRole={setRole} />} />
-                    <Route path="*" element={<Navigate to="/admin" />} />
-                </Routes>
-            );
+          return (
+            <Routes>
+              <Route path="/auth/oauth2/callback/*" element={<OAuth2 API_URL={API_URL} setLoggedEmail={setEmail} setToken={setToken} setRole={setRole} onLogin={(role, token, email) => handleLogin(role, token, email)} />} />
+              <Route path="/admin/*" element={<Login onLogin={(role, token, email) => handleLogin(role, token, email)} API_URL={API_URL} role="admin" setToken={setToken} setLoggedEmail={setEmail} setRole={setRole} />} />
+              <Route path="*" element={<Navigate to="/admin" />} />
+            </Routes>
+          );
         }
+    
         if (location.pathname.startsWith('/entry')) {
-            return (
-                <Routes>
-                    <Route path="/entry/*" element={<Login onLogin={handleLogin} API_URL={API_URL} role="Entry" setToken={setToken} setLoggedEmail={setEmail} setRole={setRole} />} />
-                    <Route path="*" element={<Navigate to="/entry" />} />
-                </Routes>
-            );
+          return (
+            <Routes>
+              <Route path="/auth/oauth2/callback/*" element={<OAuth2 onLogin={(role, token, email) => handleLogin(role, token, email)}  setLoggedEmail={setEmail} setToken={setToken} setRole={setRole} />} />
+              <Route path="/entry/*" element={<Login onLogin={(role, token, email) => handleLogin(role, token, email)} API_URL={API_URL} role="Entry" setToken={setToken} setLoggedEmail={setEmail} setRole={setRole} />} />
+              <Route path="*" element={<Navigate to="/entry" />} />
+            </Routes>
+          );
         }
+    
         return <Navigate to="/entry" />;
-    }
+      }
 
 
     return (

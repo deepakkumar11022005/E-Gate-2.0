@@ -32,18 +32,21 @@ const Entry = ({ API_URL, token ,handleLogout,logoutLoading}) => {
     const [outTime, setOutTime] = useState("");
     const [entryLoading, setEntryLoading] = useState(false);
 
-    const convertTo12HourFormat = (time24) => {
-        if (!time24) return null;
-
-        const [hour, minutes] = time24.split(':');
+    const convertTo12HourFormat = (time) => {
+        if (!time || !/^\d{2}:\d{2}:\d{2}\.\d+$/.test(time)) return null;  // Validate input format HH:MM:SS.fff
+        
+        const [hour, minutes] = time.split(':').map(part => part.split('.')[0]);  // Extract HH and MM
         let hourNum = parseInt(hour, 10);
         const ampm = hourNum >= 12 ? 'PM' : 'AM';
-        hourNum = hourNum % 12 || 12;
-
+    
+        // Convert hour from 24-hour to 12-hour format
+        hourNum = hourNum % 12 || 12;  // Convert 0 to 12 for midnight/noon case
+    
         return `${hourNum}:${minutes} ${ampm}`;
     };
+    
     const makeEntry = async (rollNumber) => {
-        console.log(rollNumber + "/////////////////////////////");
+      
         setEntryLoading(true);
         try {
             if (!rollNumber) {
@@ -81,8 +84,8 @@ const Entry = ({ API_URL, token ,handleLogout,logoutLoading}) => {
                     setBatch(batch);
                     setInDate(inDate);
                     setOutDate(outDate);
-                    setInTime(convertTo12HourFormat(inTime));
-                    setOutTime(convertTo12HourFormat(outTime));
+                    setInTime( convertTo12HourFormat(inTime));
+                    setOutTime( convertTo12HourFormat(outTime));
                     setStatus(status === "OUT");
                     setError("");
                 } else {
