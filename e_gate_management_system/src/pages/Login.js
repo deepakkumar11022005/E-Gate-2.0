@@ -5,7 +5,7 @@ import LeftSidebar from '../components/Login/LeftSidebar';
 import LoginForm from '../components/Login/LoginForm';
 import OtpVerification from '../components/Admin/OtpVerification';
 import Message from '../components/Admin/Message';
-
+import Cookies from 'js-cookie'; 
 const Login = ({ onLogin, API_URL, setLoggedEmail }) => {
     const [role, setRole] = useState('');
     const [email, setEmail] = useState('');
@@ -34,11 +34,12 @@ const Login = ({ onLogin, API_URL, setLoggedEmail }) => {
         setLoading(true);
         setError('');
 
+        Cookies.set('role', role, { path: '/', secure: true, sameSite: 'Strict' });
         const width = 600;
         const height = 600;
         const left = window.screenX + (window.outerWidth - width) / 2;
         const top = window.screenY + (window.outerHeight - height) / 2.5;
-        const url = `${API_URL}/oauth2/authorization/google?role=${role}`;
+        const url = `${API_URL}/oauth2/authorization/google`;
 
         const popup = window.open(
             url,
@@ -55,12 +56,12 @@ const Login = ({ onLogin, API_URL, setLoggedEmail }) => {
 
                 setLoggedEmail(email);
                 onLogin(role, event.data.data[0], event.data.data[1]);
-
                 console.log(event.data);
             } else {
                 setError(event.errorMessage);
             }
 
+            Cookies.remove('userRole', { path: '/' });
             setLoading(false);
             window.removeEventListener('message', handleMessage);
         };
