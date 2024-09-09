@@ -18,31 +18,38 @@ const App = () => {
     const [token, setToken] = useState(null);
     const location = useLocation();
     const navigate = useNavigate();
-    const [logoutLoading,setLogoutLoading]=useState(false);
+    const [logoutLoading, setLogoutLoading] = useState(false);
 
-    const handleLogin = (role, token, email) => {
-
-        setEmail(email);
-        console.log(email + "/////////*************");
-
-        if (role === 'admin') {
-            localStorage.setItem("loginEmail", email);
-            localStorage.setItem('adminAuthToken', token);
-            localStorage.setItem('adminRole', role);
-        } else if (role === 'Entry') {
-            localStorage.setItem("loginEmail", email);
-            localStorage.setItem('entryAuthToken', token);
-            localStorage.setItem('entryRole', role);
+    const handleLogin = async (role, token, email) => {
+        try {
+            setEmail(email);
+            if (role === 'admin') {
+                localStorage.setItem("loginEmail", email);
+                localStorage.setItem('adminAuthToken', token);
+                localStorage.setItem('adminRole', role);
+            } else if (role === 'entry') {
+                localStorage.setItem("loginEmail", email);
+                localStorage.setItem('entryAuthToken', token);
+                localStorage.setItem('entryRole', role);
+            }
+     
+            setIsLoggedIn(true);
+            setRole(role);
+            setToken(token);
+    
+           
+            navigate(role === 'admin' ? '/admin/home' : '/entry');
+    
+        } catch (error) {
+            console.error("Login error:", error);
+            
         }
-        setIsLoggedIn(true);
-        setRole(role);
-        setToken(token);
-        navigate(role === 'admin' ? '/admin/home' : '/entry');
     };
+
 
     const handleLogout = async () => {
         setLogoutLoading(true);
-        let logoutUrl = role === "Entry" ? `/kce/entry/logout` : "/auth/logout";
+        let logoutUrl = role === "entry" ? `/kce/entry/logout` : "/auth/logout";
         console.log("Attempting to log out:", role, email, token);
 
         try {
@@ -76,14 +83,14 @@ const App = () => {
         if (role === 'admin') {
             localStorage.removeItem('adminAuthToken');
             localStorage.removeItem('adminRole');
-        } else if (role === 'Entry') {
+        } else if (role === 'entry') {
             localStorage.removeItem('entryAuthToken');
             localStorage.removeItem('entryRole');
         }
         localStorage.removeItem("loginEmail");
     };
 
-  
+
 
     useEffect(() => {
         let storedToken, storedRole;
@@ -110,7 +117,7 @@ const App = () => {
 
     useEffect(() => {
         let storedToken, storedRole;
-    
+
         if (location.pathname.startsWith('/admin')) {
             storedToken = localStorage.getItem('adminAuthToken');
             storedRole = localStorage.getItem('adminRole');
@@ -127,24 +134,24 @@ const App = () => {
             setIsLoggedIn(false);
             setRole(null);
         }
-     
+
         const handleTabClose = (e) => {
-            
+
             if (performance.navigation.type === performance.navigation.TYPE_RELOAD) {
                 console.log('Page reload detected, no session clearing');
-                return;  
+                return;
             }
-    
-            clearSessionData();  
+
+            clearSessionData();
         };
-    
+
         window.addEventListener('beforeunload', handleTabClose);
-     
+
         return () => {
             window.removeEventListener('beforeunload', handleTabClose);
         };
     }, [location]);
-    
+
     useEffect(() => {
         const setFavicon = (url) => {
             const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
@@ -154,7 +161,7 @@ const App = () => {
             document.getElementsByTagName('head')[0].appendChild(link);
         };
 
-        setFavicon(kceLogo); 
+        setFavicon(kceLogo);
         switch (location.pathname) {
             case '/admin/home':
                 document.title = 'Admin Home - E-Gate Management System';
@@ -178,27 +185,45 @@ const App = () => {
     }, [location]);
     if (!isLoggedIn) {
         if (location.pathname.startsWith('/admin')) {
-          return (
-            <Routes>
-              <Route path="/auth/oauth2/callback/*" element={<OAuth2 API_URL={API_URL} setLoggedEmail={setEmail} setToken={setToken} setRole={setRole} onLogin={(role, token, email) => handleLogin(role, token, email)} />} />
-              <Route path="/admin/*" element={<Login onLogin={(role, token, email) => handleLogin(role, token, email)} API_URL={API_URL} role="admin" setToken={setToken} setLoggedEmail={setEmail} setRole={setRole} />} />
-              <Route path="*" element={<Navigate to="/admin" />} />
-            </Routes>
-          );
+            return (
+                <Routes>
+                    {/* <Route path="/auth/oauth2/callback/*" element={<OAuth2 API_URL={API_URL} setLoggedEmail={setEmail} setToken={setToken} setRole={setRole} onLogin={(role, token, email) => handleLogin(role, token, email)} />} /> */}
+                    <Route path="/admin/*"
+                        element={<Login
+                            onLogin={async (role, token, email) => await handleLogin(role, token, email)}
+                            API_URL={API_URL}
+                            role="admin"
+                            setToken={setToken}
+                            setLoggedEmail={setEmail}
+                            setRole={setRole}
+                        />}
+                    />
+                    <Route path="*" element={<Navigate to="/admin" />} />
+                </Routes>
+            );
         }
-    
+
         if (location.pathname.startsWith('/entry')) {
-          return (
-            <Routes>
-              <Route path="/auth/oauth2/callback/*" element={<OAuth2 onLogin={(role, token, email) => handleLogin(role, token, email)}  setLoggedEmail={setEmail} setToken={setToken} setRole={setRole} />} />
-              <Route path="/entry/*" element={<Login onLogin={(role, token, email) => handleLogin(role, token, email)} API_URL={API_URL} role="Entry" setToken={setToken} setLoggedEmail={setEmail} setRole={setRole} />} />
-              <Route path="*" element={<Navigate to="/entry" />} />
-            </Routes>
-          );
+            return (
+                <Routes>
+                    {/* <Route path="/auth/oauth2/callback/*" element={<OAuth2 onLogin={(role, token, email) => handleLogin(role, token, email)}  setLoggedEmail={setEmail} setToken={setToken} setRole={setRole} />} /> */}
+                    <Route path="/entry/*"
+                        element={<Login
+                            onLogin={async (role, token, email) => await handleLogin(role, token, email)}
+                            API_URL={API_URL}
+                            role="admin"
+                            setToken={setToken}
+                            setLoggedEmail={setEmail}
+                            setRole={setRole}
+                        />}
+                    />
+                    <Route path="*" element={<Navigate to="/entry" />} />
+                </Routes>
+            );
         }
-    
+
         return <Navigate to="/entry" />;
-      }
+    }
 
 
     return (
@@ -208,7 +233,7 @@ const App = () => {
             <Route path="/admin/search" element={role === 'admin' ? <Search API_URL={API_URL} handleLogout={handleLogout} token={token} /> : <Navigate to="/admin" />} />
             <Route path="/admin/manage-batch" element={role === 'admin' ? <ManageBatch API_URL={API_URL} handleLogout={handleLogout} token={token} /> : <Navigate to="/admin" />} />
             <Route path="/admin/account" element={role === 'admin' ? <Account API_URL={API_URL} handleLogout={handleLogout} token={token} email={email} /> : <Navigate to="/admin" />} />
-            <Route path="/entry" element={role === 'Entry' ? <Entry API_URL={API_URL} handleLogout={handleLogout} token={token} logoutLoading={logoutLoading}/> : <Navigate to="/entry" />} />
+            <Route path="/entry" element={role === 'entry' ? <Entry API_URL={API_URL} handleLogout={handleLogout} token={token} logoutLoading={logoutLoading} /> : <Navigate to="/entry" />} />
             <Route path="*" element={<PageNotFound />} />
         </Routes>
     );

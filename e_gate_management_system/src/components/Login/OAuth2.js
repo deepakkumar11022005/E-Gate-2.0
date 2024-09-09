@@ -7,13 +7,12 @@ const OAuth2 = ({ API_URL, setLoggedEmail, setToken, setRole, onLogin }) => {
   useEffect(() => {
     const handleOAuth2Callback = async () => {
       const queryParams = new URLSearchParams(window.location.search);
-      const encodedData = queryParams.get('data'); // Assuming 'data' is the parameter
-
+      const encodedData = queryParams.get('data');  
       if (encodedData) {
         try {
-          // Decode the base64 encoded data
+   
           const decodedData = atob(encodedData);
-          const parsedData = JSON.parse(decodedData); // Assuming the decoded data is in JSON format
+          const parsedData = JSON.parse(decodedData);  
 
           console.log('Parsed Data:', parsedData); // Debugging line to see the parsed data
 

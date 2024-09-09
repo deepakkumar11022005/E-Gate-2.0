@@ -18,7 +18,7 @@ const Login = ({ onLogin, API_URL, setLoggedEmail }) => {
     const [passwordChangedMsg, setPasswordChangedMsg] = useState(false);
     const [roleUrl, setRoleUrl] = useState('');
     const [showExpiresMsg, setShowExpiresMsg] = useState(false);
-    const [loadingOtp,setLoadingOtp]=useState(false);
+    const [loadingOtp, setLoadingOtp] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -26,34 +26,68 @@ const Login = ({ onLogin, API_URL, setLoggedEmail }) => {
         setError(null);
         setShowOtpBox(false);
     };
+
+
+
+
+    const AuthLogin = () => {
+        setLoading(true);
+        setError('');
+
+        const width = 600;
+        const height = 600;
+        const left = window.screenX + (window.outerWidth - width) / 2;
+        const top = window.screenY + (window.outerHeight - height) / 2.5;
+        const url = `${API_URL}/oauth2/authorization/google?role=${role}`;
+
+        const popup = window.open(
+            url,
+            'Google Login',
+            `width=${width},height=${height},left=${left},top=${top}`
+        );
+
+        const handleMessage = (event) => {
+            if (event.origin !== API_URL) return;
+
+            if (event.data.code == 200) {
+
+                console.log(event.data.data + " ;;;;;;;;;;;;;;;;;");
+
+                setLoggedEmail(email);
+                onLogin(role, event.data.data[0], event.data.data[1]);
+
+                console.log(event.data);
+            } else {
+                setError(event.errorMessage);
+            }
+
+            setLoading(false);
+            window.removeEventListener('message', handleMessage);
+        };
+
+        window.addEventListener('message', handleMessage);
+
+
+        const checkPopup = setInterval(() => {
+            if (popup.closed) {
+                clearInterval(checkPopup);
+                setLoading(false);
+                window.removeEventListener('message', handleMessage);
+                if (!localStorage.getItem(`${role}AuthToken`)) {
+                    setError('Login was cancelled');
+                }
+            }
+        }, 1000);
+    };
+
     useEffect(() => {
         if (location.pathname.includes('/admin')) {
             setRole('admin');
         } else if (location.pathname.includes('/entry')) {
-            setRole('Entry');
+            setRole('entry');
         }
-        setRoleUrl(role === "Entry" ? "/kce/entry/login" : "/auth/login");
-    }, [location, role]);
-
-   
-
-    const AuthLogin = async () => {
-        setLoading(true);
-        setError('');
-        
-        try {
-            console.log('Initiating OAuth2 login request');
-            window.location.href = `${API_URL}/oauth2/authorization/google`;
-            
-            
-        } catch (error) {
-            console.error(error);
-            setError('Error initiating OAuth2 login');
-        } finally {
-            setLoading(false);
-        }
-    };
-    
+        setRoleUrl(role === "entry" ? "/kce/entry/login" : "/auth/login");
+    }, [location, role, AuthLogin]);
     const handleLogin = async () => {
         setLoading(true);
         setError('');
@@ -79,13 +113,13 @@ const Login = ({ onLogin, API_URL, setLoggedEmail }) => {
         }
     };
 
-    const handleForgotPassword =  () => {
+    const handleForgotPassword = () => {
         setShowOtpBox(true);
-        
+
     };
 
-    const handleSendOtp= async( email)=>{
-       setLoadingOtp(true);
+    const handleSendOtp = async (email) => {
+        setLoadingOtp(true);
         setError('');
 
         try {
@@ -95,7 +129,7 @@ const Login = ({ onLogin, API_URL, setLoggedEmail }) => {
             });
 
             if (response.ok) {
-               return true;
+                return true;
 
             } else {
                 const data = await response.json();
@@ -108,7 +142,7 @@ const Login = ({ onLogin, API_URL, setLoggedEmail }) => {
         } finally {
             setLoadingOtp(false);
         }
-        
+
     }
 
     const handleVerifyOtp = async (email, otp) => {
@@ -144,7 +178,7 @@ const Login = ({ onLogin, API_URL, setLoggedEmail }) => {
             const response = await fetch(`${API_URL}/auth/pwd/change/${uniqueId}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email:email, password: newPassword })
+                body: JSON.stringify({ email: email, password: newPassword })
             });
 
             const commonResponse = await response.json();
@@ -157,7 +191,7 @@ const Login = ({ onLogin, API_URL, setLoggedEmail }) => {
                     navigate('/entry');
                 }
             } else {
-                setError('Password not changed. Please try again!');
+                setError(commonResponse.errorMessage);
             }
         } catch (error) {
             setError(error.message);
@@ -173,7 +207,7 @@ const Login = ({ onLogin, API_URL, setLoggedEmail }) => {
     const handleExpireMsg = () => {
         setShowExpiresMsg(false);
     };
-    
+
     return (
         <div style={{ display: 'flex', height: '100vh' }}>
             <Helmet>
@@ -191,7 +225,7 @@ const Login = ({ onLogin, API_URL, setLoggedEmail }) => {
                 setPassword={setPassword}
                 loading={loading}
                 AuthLogin={AuthLogin}
-              
+
             />
 
             {showExpiresMsg && (

@@ -123,7 +123,7 @@ const AdminSearchEntry = ({ API_URL, handleLogout, token }) => {
       if (toTime) filterUrl.append('toTime', toTime);
       if (selectedBatch) filterUrl.append('batch', selectedBatch);
       filterUrl.append('page', 0);
-      filterUrl.append('size', 100000);
+      filterUrl.append('size', 8000);
 
       const response = await fetch(`${API_URL}/kce/admin/entry?${filterUrl.toString()}`, {
         method: 'GET',
@@ -152,13 +152,13 @@ const AdminSearchEntry = ({ API_URL, handleLogout, token }) => {
         const wb = XLSX.utils.book_new();
         const ws = XLSX.utils.json_to_sheet(processedData, { origin: 6 });
 
-        XLSX.utils.sheet_add_aoa(ws, [
-          ['E-Gate Management System'],
-          [`Date: ${new Date().toLocaleDateString()}`],
-          ['Batch:', selectedBatch || 'All', 'From Date:', fromDate || 'N/A', 'From Time:', fromTime || 'N/A'],
-          ['', '', 'To Date:', toDate || 'N/A', 'To Time:', toTime || 'N/A'],
-          ['Total Entries:', data.length]
-        ], { origin: 'A1' });
+        // XLSX.utils.sheet_add_aoa(ws, [
+        //   ['E-Gate Management System'],
+        //   [`Date: ${new Date().toLocaleDateString()}`],
+        //   ['Batch:', selectedBatch || 'All', 'From Date:', fromDate || 'N/A', 'From Time:', fromTime || 'N/A'],
+        //   ['', '', 'To Date:', toDate || 'N/A', 'To Time:', toTime || 'N/A'],
+        //   ['Total Entries:', data.length]
+        // ], { origin: 'A1' });
 
         ws['!cols'] = [{ width: 20 }, { width: 20 }, { width: 30 }, { width: 25 }, { width: 20 }, { width: 15 }, { width: 15 }, { width: 15 }, { width: 15 }];
         XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
