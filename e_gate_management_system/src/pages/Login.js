@@ -126,7 +126,9 @@ const Login = ({ onLogin, API_URL, setLoggedEmail }) => {
             const commonResponse = await response.json();
             if (response.ok) {
                 setLoggedEmail(email);
-                onLogin(role, commonResponse.data[0], email);
+                // console.log(commonResponse.data+"3333333333333333");
+                
+                onLogin(role, commonResponse.data, email);
             } else {
                 setError(commonResponse.errorMessage);
             }
